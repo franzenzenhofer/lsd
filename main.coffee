@@ -1,4 +1,6 @@
-_C_ = document.getElementById('lsd')
+_DRAW_CANVAS_ = document.getElementById('lsd')
+_DRAW_CANVAS_CONTEXT = _DRAW_CANVAS_.getContext('2d')
+_C_ = document.createElement('canvas')
 _CTX_ = _C_.getContext('2d')
 _DEBUG_ = true
 _W_ = {}
@@ -16,6 +18,8 @@ BG_COLOR = '#eee'
 resizeCanvas = () ->
   _C_.width = window.innerWidth
   _C_.height = window.innerHeight
+  _DRAW_CANVAS_.width = _C_.width
+  _DRAW_CANVAS_.heigth = _C_.height
 
 initWorld = () ->
   resizeCanvas()
@@ -96,6 +100,7 @@ draw = (world, ctx) ->
   drawLines(world.lines, ctx)
   drawSquare(world.square, ctx)
   drawTempLine(world, ctx)
+  _DRAW_CANVAS_CONTEXT.drawImage(_C_, 0, 0)
 
 randomInt = (min,max) ->
   return Math.floor(Math.random() * (max - min + 1)) + min
