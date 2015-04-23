@@ -379,6 +379,7 @@
 
   setStartLinePoint = function(e) {
     var point;
+    e.preventDefault();
     _W_.line_point_stack = [];
     point = getInputCoordinates(e);
     placePoint(point, _W_);
@@ -387,16 +388,19 @@
 
   setFinalLinePoint = function(e) {
     var point;
+    e.preventDefault();
     point = getInputCoordinates(e);
     placePoint(point, _W_);
     return _W_.pointer_down = false;
   };
 
   setTempLineEndPoint = function(e) {
+    e.preventDefault();
     return _W_.temp_line_end_point = getInputCoordinates(e);
   };
 
   onDrawOut = function(e) {
+    e.preventDefault();
     return setFinalLinePoint(e);
   };
 

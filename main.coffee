@@ -302,7 +302,6 @@ bounceLineNormal = (dot, line) ->
   return unitVector(dot_to_closest_point_on_line_vector)
 
 getInputCoordinates = (e) ->
-  e.preventDefault()
   rect = _C_.getBoundingClientRect()
   ex = e.pageX or e?.touches[0]?.clientX
   ey = e.pageY or e?.touches[0]?.clientY
@@ -320,20 +319,24 @@ placePoint = (point, world) ->
   world.line_point_stack.push(point)
 
 setStartLinePoint = (e) ->
+  e.preventDefault()
   _W_.line_point_stack = []
   point = getInputCoordinates(e)
   placePoint(point, _W_)
   _W_.pointer_down = true
 
 setFinalLinePoint = (e) ->
+  e.preventDefault()
   point = getInputCoordinates(e)
   placePoint(point, _W_)
   _W_.pointer_down = false
 
 setTempLineEndPoint = (e) ->
+  e.preventDefault()
   _W_.temp_line_end_point = getInputCoordinates(e)
 
-onDrawOut = (e) -> 
+onDrawOut = (e) ->
+  e.preventDefault() 
   setFinalLinePoint(e)
 
 
