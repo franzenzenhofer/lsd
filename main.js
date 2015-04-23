@@ -64,6 +64,7 @@
   window.addEventListener('resize', window.startLsd, false);
 
   copy = function() {
+    _VCTX_.clearRect(0, 0, _VC_.width, _VC_.height);
     return _VCTX_.drawImage(_C_, 0, 0);
   };
 
@@ -101,6 +102,7 @@
   };
 
   draw = function(world, ctx) {
+    ctx.clearRect(0, 0, world.w, world.h);
     drawDots(world.dots, ctx);
     drawLines(world.lines, ctx);
     drawSquare(world.square, ctx);

@@ -53,6 +53,7 @@ d = (msg) ->
 window.addEventListener('resize', window.startLsd, false)
 
 copy = () ->
+  _VCTX_.clearRect(0,0,_VC_.width, _VC_.height)
   _VCTX_.drawImage(_C_, 0, 0)
 
 window.startLsd = () -> 
@@ -104,7 +105,7 @@ update = (world) ->
 
 draw = (world, ctx) ->
   #d('in draw')
-  #ctx.clearRect(0, 0, world.w, world.h)
+  ctx.clearRect(0, 0, world.w, world.h)
   #_CTX_.fillStyle = BG_COLOR
   #_CTX_.fillRect(0, 0, world.w, world.h)
   drawDots(world.dots, ctx)
