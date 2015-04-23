@@ -20,7 +20,7 @@
 
   SQUARE_SIDE = 35;
 
-  BG_COLOR = 'lightyellow';
+  BG_COLOR = '#eee';
 
   _VC_ = document.getElementById('lsd');
 
@@ -103,7 +103,8 @@
   };
 
   draw = function(world, ctx) {
-    ctx.clearRect(0, 0, world.w, world.h);
+    _CTX_.fillStyle = BG_COLOR;
+    _CTX_.fillRect(0, 0, world.w, world.h);
     drawDots(world.dots, ctx);
     drawLines(world.lines, ctx);
     drawSquare(world.square, ctx);
@@ -174,9 +175,6 @@
     if (inverse == null) {
       inverse = false;
     }
-    ctx.clearRect(0, 0, _W_.w, _W_.h);
-    ctx.fillStyle = BG_COLOR;
-    ctx.fillRect(dot[0] - 50, dot[1] - 50, 100, 100);
     ctx.beginPath();
     ctx.arc(dot[0], dot[1], DOT_RADIUS, 0, Math.PI * 2, true);
     ctx.closePath();
