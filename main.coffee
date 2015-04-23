@@ -159,7 +159,9 @@ updateLines = (world) ->
 
 drawDot = (dot, ctx, inverse = false) ->
   ctx.beginPath()
-  ctx.arc(Math.floor(dot[0]), Math.floor(dot[1]), DOT_RADIUS, 0, Math.PI * 2, true)
+  #ctx.arc(Math.floor(dot[0]), Math.floor(dot[1]), DOT_RADIUS, 0, Math.PI * 2, true)
+  ctx.arc(dot[0], dot[1], DOT_RADIUS, 0, Math.PI * 2, true)
+
   ctx.closePath()
   if not inverse
     ctx.fillStyle = "black"
