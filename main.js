@@ -8,7 +8,7 @@
 
   _ANIMATION_FRAME_ID_ = 0;
 
-  VELOCITY_Y = 4;
+  VELOCITY_Y = 10;
 
   VELOCITY_X = 0;
 
