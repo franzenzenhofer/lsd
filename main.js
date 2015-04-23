@@ -210,7 +210,7 @@
     ctx.moveTo(Math.floor(line[0]), Math.floor(line[1]));
     ctx.lineTo(Math.floor(line[2]), Math.floor(line[3]));
     if (!is_temp_line) {
-      ctx.setLineDash([0]);
+      ctx.setLineDash([0, 0]);
       ctx.strokeStyle = "black";
     } else {
       ctx.strokeStyle = "red";
@@ -257,7 +257,7 @@
       fill = false;
     }
     x = p[0], y = p[1];
-    ctx.setLineDash([0]);
+    ctx.setLineDash([0, 0]);
     ctx.rect(x, y, SQUARE_SIDE, SQUARE_SIDE);
     ctx.strokeStyle = "black";
     ctx.stroke();
