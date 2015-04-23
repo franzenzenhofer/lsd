@@ -7,13 +7,14 @@ _ANIMATION_FRAME_ID_ = 0
 VELOCITY_Y = 4
 VELOCITY_X = 0
 DOT_RADIUS = 3
+DOT_U = 6
 GRAVITY_Y = 0.01
 SQUARE_SIDE = 35
-BG_COLOR = '#eee'
+BG_COLOR = 'lightyellow'
 
 _VC_ = document.getElementById('lsd')
 _VCTX_ = _VC_.getContext('2d')
-_VC_.style.backgroundColor = "yellow"
+_VC_.style.backgroundColor = BG_COLOR
 
 _C_ =  document.createElement('canvas')#document.getElementById('lsd')
 _C_.style.backgroundColor = BG_COLOR
@@ -53,7 +54,7 @@ d = (msg) ->
 window.addEventListener('resize', window.startLsd, false)
 
 copy = () ->
-  _VCTX_.clearRect(0,0,_VC_.width, _VC_.height)
+  #_VCTX_.clearRect(0,0,_VC_.width, _VC_.height)
   _VCTX_.drawImage(_C_, 0, 0)
 
 window.startLsd = () -> 
@@ -159,6 +160,10 @@ updateLines = (world) ->
   return world
 
 drawDot = (dot, ctx, inverse = false) ->
+  ctx.clearRect(0, 0, _W_.w, _W_.h)
+
+  ctx.fillStyle = BG_COLOR
+  ctx.fillRect(dot[0]-50, dot[1]-50, 100, 100)
   ctx.beginPath()
   #ctx.arc(Math.floor(dot[0]), Math.floor(dot[1]), DOT_RADIUS, 0, Math.PI * 2, true)
   ctx.arc(dot[0], dot[1], DOT_RADIUS, 0, Math.PI * 2, true)
