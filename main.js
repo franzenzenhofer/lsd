@@ -448,4 +448,8 @@
     return onDrawOut(e);
   });
 
+  document.body.on('touchmove', function(e) {
+    return e.preventDefault();
+  });
+
 }).call(this);
