@@ -302,6 +302,7 @@ bounceLineNormal = (dot, line) ->
   return unitVector(dot_to_closest_point_on_line_vector)
 
 getInputCoordinates = (e) ->
+  e.preventDefault()
   rect = _C_.getBoundingClientRect()
   ex = e.pageX or e?.touches[0]?.clientX
   ey = e.pageY or e?.touches[0]?.clientY
