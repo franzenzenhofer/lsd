@@ -188,6 +188,7 @@ drawLine = (line, ctx, is_temp_line = false) ->
   ctx.moveTo(Math.floor(line[0]), Math.floor(line[1]))
   ctx.lineTo(Math.floor(line[2]), Math.floor(line[3]))
   if not is_temp_line
+    ctx.restore()
     ctx.setLineDash([0,0])
     ctx.strokeStyle = "black"
   else
@@ -216,6 +217,7 @@ makeSquare = (x = randomInt(SQUARE_SIDE+2, _W_.w-(SQUARE_SIDE+2)), y = randomInt
 
 drawSquare = (p, ctx = _CTX_, fill = false) ->
   [x,y] = p
+  ctx.restore()
   ctx.setLineDash([0,0])
   ctx.rect(x,y,SQUARE_SIDE,SQUARE_SIDE)
   ctx.strokeStyle = "black"
