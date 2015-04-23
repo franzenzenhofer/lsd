@@ -4,7 +4,7 @@ _DEBUG_ = true
 _W_ = {}
 _ANIMATION_FRAME_ID_ = 0
 
-VELOCITY_Y = 10
+VELOCITY_Y = 4
 VELOCITY_X = 0
 DOT_RADIUS = 3
 GRAVITY_Y = 0.01
@@ -105,8 +105,8 @@ update = (world) ->
 draw = (world, ctx) ->
   #d('in draw')
   #ctx.clearRect(0, 0, world.w, world.h)
-  _CTX_.fillStyle = BG_COLOR
-  _CTX_.fillRect(0, 0, world.w, world.h)
+  #_CTX_.fillStyle = BG_COLOR
+  #_CTX_.fillRect(0, 0, world.w, world.h)
   drawDots(world.dots, ctx)
   drawLines(world.lines, ctx)
   drawSquare(world.square, ctx)
