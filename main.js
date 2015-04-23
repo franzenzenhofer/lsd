@@ -448,7 +448,7 @@
     return onDrawOut(e);
   });
 
-  document.body.addEventListener('touchmove', function(e) {
+  window.document.body.addEventListener('touchmove', function(e) {
     return e.preventDefault();
   });
 

@@ -361,7 +361,7 @@ _C_.addEventListener('mousemove', (e) -> setTempLineEndPoint(e))
 _C_.addEventListener('touchmove', (e) -> setTempLineEndPoint(e))
 _C_.addEventListener('mouseout', (e) -> onDrawOut(e))
 _C_.addEventListener('touchleave', (e) -> onDrawOut(e))
-document.body.addEventListener('touchmove', (e) -> e.preventDefault())
+window.document.body.addEventListener('touchmove', (e) -> e.preventDefault())
 
 
 
