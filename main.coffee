@@ -1,7 +1,5 @@
-_DRAW_CANVAS_ = document.getElementById('lsd')
-_DRAW_CANVAS_CONTEXT = _DRAW_CANVAS_.getContext('2d')
-_C_ = document.createElement('canvas')
-_CTX_ = _C_.getContext('2d')
+
+
 _DEBUG_ = true
 _W_ = {}
 _ANIMATION_FRAME_ID_ = 0
@@ -11,15 +9,22 @@ VELOCITY_X = 0
 DOT_RADIUS = 3
 GRAVITY_Y = 0.01
 SQUARE_SIDE = 35
-
 BG_COLOR = '#eee'
+
+_VC_ = document.getElementById('lsd')
+_VCTX_ = _VC_.getContext('2d')
+_VC_.style.backgroundColor = "yellow"
+
+_C_ =  document.createElement('canvas')#document.getElementById('lsd')
+_C_.style.backgroundColor = BG_COLOR
+_CTX_ = _C_.getContext('2d')
+
+
 
 
 resizeCanvas = () ->
-  _C_.width = window.innerWidth
-  _C_.height = window.innerHeight
-  _DRAW_CANVAS_.width = _C_.width
-  _DRAW_CANVAS_.heigth = _C_.height
+  _VC_.width = _C_.width = window.innerWidth
+  _VC_.height = _C_.height = window.innerHeight
 
 initWorld = () ->
   resizeCanvas()
@@ -47,6 +52,9 @@ d = (msg) ->
 
 window.addEventListener('resize', window.startLsd, false)
 
+copy = () ->
+  _VCTX_.drawImage(_C_, 0, 0)
+
 window.startLsd = () -> 
   initWorld()
   #_W_.lines.push(makeLine(10,0,290,350))
@@ -64,6 +72,7 @@ tick = () ->
     #d('hiho')
     #d('_W_.end = true')
     this_is_the_end(_W_)
+    copy()
     window.cancelAnimationFrame(_ANIMATION_FRAME_ID_)
   
   
@@ -95,12 +104,14 @@ update = (world) ->
 
 draw = (world, ctx) ->
   #d('in draw')
-  ctx.clearRect(0, 0, world.w, world.h)
+  #ctx.clearRect(0, 0, world.w, world.h)
+  _CTX_.fillStyle = BG_COLOR
+  _CTX_.fillRect(0, 0, world.w, world.h)
   drawDots(world.dots, ctx)
   drawLines(world.lines, ctx)
   drawSquare(world.square, ctx)
   drawTempLine(world, ctx)
-  _DRAW_CANVAS_CONTEXT.drawImage(_C_, 0, 0)
+  copy() #_VCTX_.drawImage(_C_, 0, 0)
 
 randomInt = (min,max) ->
   return Math.floor(Math.random() * (max - min + 1)) + min
@@ -307,15 +318,15 @@ bounceLineNormal = (dot, line) ->
   return unitVector(dot_to_closest_point_on_line_vector)
 
 getInputCoordinates = (e) ->
-  rect = _C_.getBoundingClientRect()
+  rect = _VC_.getBoundingClientRect()
   ex = e.pageX or e?.touches[0]?.clientX
   ey = e.pageY or e?.touches[0]?.clientY
   if e.type is 'touchend' #if ex is 0 and ex is 0 #and e?.touches?.length is 0
     [ex, ey] = _W_.temp_line_end_point
     _W_.temp_line_end_point = null
     #alert(ex+' '+ey)
-  x = ex - _C_.offsetLeft #e.pageX - rect.left #- r/2
-  y = ey - _C_.offsetTop #rect.top #- r/2
+  x = ex - _VC_.offsetLeft #e.pageX - rect.left #- r/2
+  y = ey - _VC_.offsetTop #rect.top #- r/2
   #d(x)
   #d(y)
   return [x,y]
@@ -358,14 +369,14 @@ stackToLine = (stack) ->
 
 
 
-_C_.addEventListener('mousedown', (e) -> setStartLinePoint(e))
-_C_.addEventListener('touchstart', (e) -> d('touchstart');setStartLinePoint(e))
-_C_.addEventListener('mouseup', (e) -> setFinalLinePoint(e))
-_C_.addEventListener('touchend', (e) -> d('touchend');d(e);setFinalLinePoint(e))
-_C_.addEventListener('mousemove', (e) -> setTempLineEndPoint(e))
-_C_.addEventListener('touchmove', (e) -> setTempLineEndPoint(e))
-_C_.addEventListener('mouseout', (e) -> onDrawOut(e))
-_C_.addEventListener('touchleave', (e) -> onDrawOut(e))
+_VC_.addEventListener('mousedown', (e) -> setStartLinePoint(e))
+_VC_.addEventListener('touchstart', (e) -> d('touchstart');setStartLinePoint(e))
+_VC_.addEventListener('mouseup', (e) -> setFinalLinePoint(e))
+_VC_.addEventListener('touchend', (e) -> d('touchend');d(e);setFinalLinePoint(e))
+_VC_.addEventListener('mousemove', (e) -> setTempLineEndPoint(e))
+_VC_.addEventListener('touchmove', (e) -> setTempLineEndPoint(e))
+_VC_.addEventListener('mouseout', (e) -> onDrawOut(e))
+_VC_.addEventListener('touchleave', (e) -> onDrawOut(e))
 window.document.body.addEventListener('touchmove', (e) -> e.preventDefault())
 
 
