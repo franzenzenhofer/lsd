@@ -27,7 +27,7 @@ resizeCanvas = () ->
   _VC_.width = _C_.width = window.innerWidth
   _VC_.height = _C_.height = window.innerHeight
 
-initWorld = () ->
+initWorld = (wins = 0, average_lines = 0) ->
   resizeCanvas()
   _W_.dots = []
   _W_.lines = []
@@ -42,6 +42,8 @@ initWorld = () ->
   _W_.lost = false 
   _W_.pointer_down = false
   _W_.temp_line_end_point = null
+  _W_.wins = wins
+  _W_.average_lines = ( Math.round(average_lines * 100) / 100 )
 
 
 
@@ -57,8 +59,8 @@ copy = () ->
   #_VCTX_.clearRect(0,0,_VC_.width, _VC_.height)
   _VCTX_.drawImage(_C_, 0, 0)
 
-window.startLsd = () -> 
-  initWorld()
+window.startLsd = (wins = 0, average_lines = 0) -> 
+  initWorld(wins, average_lines)
   #_W_.lines.push(makeLine(10,0,290,350))
   #_W_.lines.push(makeLine(390,0,190,350))
   #_W_.lines.push(makeLine(10,350,90,350))
@@ -73,7 +75,7 @@ tick = () ->
     #debugger
     #d('hiho')
     #d('_W_.end = true')
-    this_is_the_end(_W_)
+    ragnaroek(_W_)
     copy()
     window.cancelAnimationFrame(_ANIMATION_FRAME_ID_)
   
@@ -81,11 +83,14 @@ tick = () ->
   #check here if an end event did happen????
   #debugger
 
-this_is_the_end = (world) ->
+ragnaroek = (world) ->
   #alert('end')
   #_END_ = true
 
-  drawSquare(world.square, _CTX_, true) if world.won is true
+  if world.won is true
+    drawSquare(world.square, _CTX_, true)
+    wins = _W_.wins+1
+    av = (_W_.average_lines + _W_.lines.length) / 2
   drawDots(world.dots, _CTX_, true)
   #d('end of game')
   #alert('end of game')
@@ -93,7 +98,7 @@ this_is_the_end = (world) ->
   #d(_ANIMATION_FRAME_ID_)
   #d('animate frame ID NOW END')
   if _W_.end is true
-    setTimeout(startLsd, 1000)
+    setTimeout(startLsd, 1000, wins, av)
 
 
 update = (world) ->
@@ -113,15 +118,22 @@ draw = (world, ctx) ->
   drawLines(world.lines, ctx)
   drawSquare(world.square, ctx)
   drawTempLine(world, ctx)
+  writeStuff(world, ctx)
   copy() #_VCTX_.drawImage(_C_, 0, 0)
 
 randomInt = (min,max) ->
   return Math.floor(Math.random() * (max - min + 1)) + min
 
+writeStuff = (world, ctx) ->
+  ctx.fillStyle = "black";
+  ctx.font = "12px Verdana";
+  ctx.fillText(world.wins+" (Ø "+world.average_lines+")", 2, 12);
+  ctx.fillText(world.wins, 2, 12);
+
 #class Dot extends Array
 #  @vx = VELOCITY_X
 #  @vy = 
-#x=Math.floor(_W_.h/2)
+#x=Math.floor(_W_.h/2)Ø "+world.aver  +"
 makeDot = (x = Math.floor(_W_.w/2),y = 10) ->
   a = [x,y]
   a.velocity  = {}
@@ -334,7 +346,7 @@ getInputCoordinates = (e) ->
   rect = _VC_.getBoundingClientRect()
   ex = e.pageX or e?.touches[0]?.clientX
   ey = e.pageY or e?.touches[0]?.clientY
-  if e.type is 'touchend' #if ex is 0 and ex is 0 #and e?.touches?.length is 0
+  if e.type is 'touchend'  #if ex is 0 and ex is 0 #and e?.touches?.length is 0
     [ex, ey] = _W_.temp_line_end_point
     _W_.temp_line_end_point = null
     #alert(ex+' '+ey)
@@ -390,6 +402,8 @@ _VC_.addEventListener('mousemove', (e) -> setTempLineEndPoint(e))
 _VC_.addEventListener('touchmove', (e) -> setTempLineEndPoint(e))
 _VC_.addEventListener('mouseout', (e) -> onDrawOut(e))
 _VC_.addEventListener('touchleave', (e) -> onDrawOut(e))
+_VC_.addEventListener('touchcancel', (e) -> onDrawOut(e))
+
 window.document.body.addEventListener('touchmove', (e) -> e.preventDefault())
 
 
