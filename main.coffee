@@ -90,7 +90,10 @@ ragnaroek = (world) ->
   if world.won is true
     drawSquare(world.square, _CTX_, true)
     wins = _W_.wins+1
-    av = (_W_.average_lines + _W_.lines.length) / 2
+    if wins > 1
+      av = (_W_.average_lines + _W_.lines.length) / 2
+    else
+      av = _W_.lines.length
   drawDots(world.dots, _CTX_, true)
   #d('end of game')
   #alert('end of game')
