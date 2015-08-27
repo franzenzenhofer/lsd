@@ -376,17 +376,23 @@ getInputCoordinates = (e) ->
 placePoint = (point, world) ->
   world.line_point_stack.push(point)
 
+isSurrenderClicked = (point, world = _W_) ->
+  [x,y] = point
+  if x < 64  and x > 2 and y > 2 and y < 28
+    _W_.end = true
+    _W_.lost = true
+    return true
+  return false
+
+
+
 setStartLinePoint = (e) ->
   e.preventDefault()
   _W_.line_point_stack = []
   point = getInputCoordinates(e)
   #check if click on surrender
   #d(point)
-  [x,y] = point
-  if x < 64  and x > 2 and y > 16 and y < 28
-      _W_.end = true
-      _W_.lost = true
-  else
+  if isSurrenderClicked(point) is false
     placePoint(point, _W_)
     _W_.pointer_down = true
 
