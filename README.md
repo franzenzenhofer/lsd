@@ -1,6 +1,8 @@
 # lsd
 LSD - line-square-dot: an addicting game
 
+and yes, there are some bugs with my homemade physics/collision engine, feel free to send awesome push requests! 
+
 Franz Enzenhofer
 
 Something nearly like MIT License (MIT)
