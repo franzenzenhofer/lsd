@@ -1,6 +1,6 @@
 
 
-_DEBUG_ = true
+_DEBUG_ = false
 _W_ = {}
 _ANIMATION_FRAME_ID_ = 0
 
@@ -8,7 +8,7 @@ VELOCITY_Y = 4
 VELOCITY_X = 0
 DOT_RADIUS = 3
 DOT_U = 6
-GRAVITY_Y = 0.01
+GRAVITY_Y = 0.015
 SQUARE_SIDE = 35
 BG_COLOR = '#eee'
 
@@ -45,11 +45,17 @@ initWorld = (wins = 0, average_lines = 0) ->
   _W_.wins = wins
   _W_.average_lines = ( Math.round(average_lines * 100) / 100 )
 
+  if _W_.wins > 0
+    for [1 .. _W_.wins]
+      createLine(randomInt(0, _W_.w),randomInt(0, _W_.h),randomInt(0, _W_.w),randomInt(0, _W_.h),_W_)
+
+
 
 
 d = (msg) ->
   console.log(msg) if _DEBUG_ 
   return msg
+
 
 
 
@@ -94,6 +100,11 @@ ragnaroek = (world) ->
       av = (_W_.average_lines + _W_.lines.length) / 2
     else
       av = _W_.lines.length
+  else
+    wins = _W_.wins-1
+    if wins < 0 then wins = 0
+    av = _W_.average_lines
+
   drawDots(world.dots, _CTX_, true)
   #d('end of game')
   #alert('end of game')
@@ -130,8 +141,11 @@ randomInt = (min,max) ->
 writeStuff = (world, ctx) ->
   ctx.fillStyle = "black";
   ctx.font = "12px Verdana";
-  ctx.fillText(world.wins+" (Ø "+world.average_lines+")", 2, 12);
-  ctx.fillText(world.wins, 2, 12);
+  ctx.fillText("Level "+world.wins, 2, 12)
+  ctx.fillText("Surrender", 2, 26)  
+  drawLine([2,28,64,28], ctx)
+  #ctx.fillText(world.wins+" (Ø "+world.average_lines+")", 2, 12);
+  #ctx.fillText(world.wins, 2, 12);
 
 #class Dot extends Array
 #  @vx = VELOCITY_X
@@ -366,8 +380,15 @@ setStartLinePoint = (e) ->
   e.preventDefault()
   _W_.line_point_stack = []
   point = getInputCoordinates(e)
-  placePoint(point, _W_)
-  _W_.pointer_down = true
+  #check if click on surrender
+  #d(point)
+  [x,y] = point
+  if x < 64  and x > 2 and y > 16 and y < 28
+      _W_.end = true
+      _W_.lost = true
+  else
+    placePoint(point, _W_)
+    _W_.pointer_down = true
 
 setFinalLinePoint = (e) ->
   e.preventDefault()

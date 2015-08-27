@@ -2,7 +2,7 @@
 (function() {
   var BG_COLOR, DOT_RADIUS, DOT_U, GRAVITY_Y, SQUARE_SIDE, VELOCITY_X, VELOCITY_Y, _ANIMATION_FRAME_ID_, _CTX_, _C_, _DEBUG_, _VCTX_, _VC_, _W_, applyGravityToDot, bounceDot, bounceLineNormal, copy, createLine, d, distance, draw, drawDot, drawDots, drawLine, drawLines, drawSquare, drawTempLine, getInputCoordinates, getLineLength, initWorld, isDotLineCollison, isDotSquareCollision, isOutOfBounds, magnitude, makeDot, makeLine, makeSquare, makeVector, makeVectorByLine, moveDot, onDrawOut, placePoint, pointOnLineClosestToDot, ragnaroek, randomInt, resizeCanvas, setFinalLinePoint, setStartLinePoint, setTempLineEndPoint, stackToLine, tick, unitVector, update, updateDots, updateLines, vectorPointProduct, writeStuff;
 
-  _DEBUG_ = true;
+  _DEBUG_ = false;
 
   _W_ = {};
 
@@ -16,7 +16,7 @@
 
   DOT_U = 6;
 
-  GRAVITY_Y = 0.01;
+  GRAVITY_Y = 0.015;
 
   SQUARE_SIDE = 35;
 
@@ -40,6 +40,7 @@
   };
 
   initWorld = function(wins, average_lines) {
+    var k, ref, results;
     if (wins == null) {
       wins = 0;
     }
@@ -61,7 +62,14 @@
     _W_.pointer_down = false;
     _W_.temp_line_end_point = null;
     _W_.wins = wins;
-    return _W_.average_lines = Math.round(average_lines * 100) / 100;
+    _W_.average_lines = Math.round(average_lines * 100) / 100;
+    if (_W_.wins > 0) {
+      results = [];
+      for (k = 1, ref = _W_.wins; 1 <= ref ? k <= ref : k >= ref; 1 <= ref ? k++ : k--) {
+        results.push(createLine(randomInt(0, _W_.w), randomInt(0, _W_.h), randomInt(0, _W_.w), randomInt(0, _W_.h), _W_));
+      }
+      return results;
+    }
   };
 
   d = function(msg) {
@@ -110,6 +118,12 @@
       } else {
         av = _W_.lines.length;
       }
+    } else {
+      wins = _W_.wins - 1;
+      if (wins < 0) {
+        wins = 0;
+      }
+      av = _W_.average_lines;
     }
     drawDots(world.dots, _CTX_, true);
     if (_W_.end === true) {
@@ -141,8 +155,9 @@
   writeStuff = function(world, ctx) {
     ctx.fillStyle = "black";
     ctx.font = "12px Verdana";
-    ctx.fillText(world.wins + " (Ø " + world.average_lines + ")", 2, 12);
-    return ctx.fillText(world.wins, 2, 12);
+    ctx.fillText("Level " + world.wins, 2, 12);
+    ctx.fillText("Surrender", 2, 26);
+    return drawLine([2, 28, 64, 28], ctx);
   };
 
   makeDot = function(x, y) {
@@ -424,12 +439,18 @@
   };
 
   setStartLinePoint = function(e) {
-    var point;
+    var point, x, y;
     e.preventDefault();
     _W_.line_point_stack = [];
     point = getInputCoordinates(e);
-    placePoint(point, _W_);
-    return _W_.pointer_down = true;
+    x = point[0], y = point[1];
+    if (x < 64 && x > 2 && y > 16 && y < 28) {
+      _W_.end = true;
+      return _W_.lost = true;
+    } else {
+      placePoint(point, _W_);
+      return _W_.pointer_down = true;
+    }
   };
 
   setFinalLinePoint = function(e) {
