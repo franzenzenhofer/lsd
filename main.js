@@ -63,6 +63,7 @@
     _W_.temp_line_end_point = null;
     _W_.wins = wins;
     _W_.average_lines = Math.round(average_lines * 100) / 100;
+    _W_.surrender = false;
     if (_W_.wins > 0) {
       results = [];
       for (k = 1, ref = _W_.wins; 1 <= ref ? k <= ref : k >= ref; 1 <= ref ? k++ : k--) {
@@ -127,7 +128,12 @@
     }
     drawDots(world.dots, _CTX_, true);
     if (_W_.end === true) {
-      return setTimeout(startLsd, 1000, wins, av);
+      if (_W_.surrender === true) {
+        _W_.surrender = false;
+        return setTimeout(startLsd, 200, wins, av);
+      } else {
+        return setTimeout(startLsd, 1000, wins, av);
+      }
     }
   };
 
@@ -447,6 +453,7 @@
     if (x < 64 && x > 2 && y > 2 && y < 28) {
       _W_.end = true;
       _W_.lost = true;
+      _W_.surrender = true;
       return true;
     }
     return false;
