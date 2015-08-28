@@ -4,11 +4,11 @@ _DEBUG_ = false
 _W_ = {}
 _ANIMATION_FRAME_ID_ = 0
 
-VELOCITY_Y = 4
+VELOCITY_Y = 3.5
 VELOCITY_X = 0
 DOT_RADIUS = 3
 DOT_U = 6
-GRAVITY_Y = 0.015
+GRAVITY_Y = 0.0145
 SQUARE_SIDE = 35
 BG_COLOR = '#eee'
 
@@ -339,7 +339,12 @@ moveDot = (dot) ->
   return dot
 
 applyGravityToDot = (dot) ->
-  dot.velocity.y = dot.velocity.y + GRAVITY_Y if dot.velocity.y < VELOCITY_Y
+  dot.velocity.y = dot.velocity.y + GRAVITY_Y
+  dot = velocityBound(dot)
+  return dot
+
+velocityBound = (dot) ->
+  if dot.velocity.y > VELOCITY_Y then dot.velocity.y = VELOCITY_Y
   return dot
 
 bounceDot = (dot, line) ->
@@ -357,6 +362,9 @@ bounceDot = (dot, line) ->
   #d('bounce_line_normal');d(bounce_line_normal)
   dot.velocity.x = dot.velocity.x - (2 * dot_to_line_vector_product * bounce_line_normal.x)
   dot.velocity.y = dot.velocity.y - (2 * dot_to_line_vector_product * bounce_line_normal.y)
+  #check if y velcity still ok
+  dot = velocityBound(dot)
+  return dot
   #method to make sure dot does not get stuck
 
 bounceLineNormal = (dot, line) ->
