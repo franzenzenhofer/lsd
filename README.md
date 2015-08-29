@@ -5,6 +5,10 @@ and yes, there are some bugs with my homemade physics/collision engine, feel fre
 
 Franz Enzenhofer
 
+** heyho, if you are a native app developer - let's make an official native app out of this, we sell it on the appstore for 0,99c and we make 50/50 - if interrested please mail fe [[@t]] f19n dot com **
+
+
+
 Something nearly like MIT License (MIT)
 
 Copyright (c) 2015-9999 Franz Enzenhofer
