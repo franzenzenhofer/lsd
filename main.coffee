@@ -38,13 +38,11 @@ initWorld = (wins = 0, average_lines = 0) ->
   _W_.square = makeSquare()
   _W_.dots.push(makeDot())
   _W_.end = false
-  _W_.won = false
-  _W_.lost = false 
+  _W_.won = false #won = false means loss or surrender
   _W_.pointer_down = false
   _W_.temp_line_end_point = null
   _W_.wins = wins
   _W_.average_lines = ( Math.round(average_lines * 100) / 100 )
-  _W_.surrender = false
 
   if _W_.wins > 0
     for [1 .. _W_.wins]
@@ -113,13 +111,10 @@ ragnaroek = (world) ->
   #d(_ANIMATION_FRAME_ID_)
   #d('animate frame ID NOW END')
   if _W_.end is true
-    if _W_.surrender is true
-      _W_.surrender = false
+    if _W_.won is false #means surrender or lost
       setTimeout(startLsd, 200, wins, av)
     else
       setTimeout(startLsd, 1000, wins, av)
-
-
 
 update = (world) ->
   world = updateDots(world)
@@ -185,7 +180,7 @@ updateDots = (world) ->
     if isOutOfBounds(dot, world)
       #endGame(true) # only set the variable here
       world.end = true
-      world.lost = true
+      world.won = false # surrender 
     #if dot[1] > world.h 
     #  VELOCITY = VELOCITY * -1
   #alert(world)
@@ -394,8 +389,7 @@ isSurrenderClicked = (point, world = _W_) ->
   [x,y] = point
   if x < 64  and x > 2 and y > 2 and y < 28
     _W_.end = true
-    _W_.lost = true
-    _W_.surrender = true
+    _W_.won = false # surrender clicked, so lost
     return true
   return false
 
