@@ -50,7 +50,6 @@ initWorld = (wins = 0, average_lines = 0) ->
 
 
 
-
 d = (msg) ->
   console.log(msg) if _DEBUG_ 
   return msg
@@ -137,6 +136,8 @@ draw = (world, ctx) ->
   copy() #_VCTX_.drawImage(_C_, 0, 0)
 
 randomInt = (min,max) ->
+  min = Math.floor(min)
+  max = Math.floor(max)
   return Math.floor(Math.random() * (max - min + 1)) + min
 
 writeStuff = (world, ctx) ->
@@ -164,6 +165,21 @@ makeLine = (x1, y1, x2, y2) ->
 
 createLine = (x1, y1, x2, y2, world = _W_) ->
   world.lines.push(makeLine(x1, y1, x2, y2))
+
+createRandomLine = (world = _W_) ->
+    x1 = randomInt(0, _W_.w)
+    y1 = randomInt(0+10, _W_.h)
+    x2 = randomInt(0, _W_.w)
+    y2 = randomInt(0+10, _W_.h)
+
+    if y1 < 40 and y2 < 40
+      if y1 <= y2
+        y2 = randomInt(_W_.h/2, _W_.h)
+      else
+        y1 = randomInt(_W_.h/2, _W_.h)
+
+    createLine(x1, y1, x2, y2,_W_)
+
 
 
 
