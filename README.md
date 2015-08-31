@@ -1,6 +1,8 @@
 # lsd
 LSD - line-square-dot: an addicting game
 
+play the game at http://lalo.li/lsd/
+
 and yes, there are some bugs with my homemade physics/collision engine, feel free to send awesome push requests! 
 
 Franz Enzenhofer
