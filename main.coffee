@@ -1,31 +1,60 @@
 
 
-_DEBUG_ = false
+_DEBUG_ = true
 _W_ = {}
 _ANIMATION_FRAME_ID_ = 0
 
 VELOCITY_Y = 3.5
 VELOCITY_X = 0
-DOT_RADIUS = 3
+DOT_RADIUS = 3.2
 DOT_U = 6
 GRAVITY_Y = 0.0145
 SQUARE_SIDE = 35
 BG_COLOR = '#eee'
+LINE_WIDTH = 1.5
 
-_VC_ = document.getElementById('lsd')
+_LOCATION_ = window.document.body
+
+#visual canvas 
+_VC_ = document.createElement('canvas') #document.getElementById('lsd')
 _VCTX_ = _VC_.getContext('2d')
+#_VC_.style.backgroundColor = 'green'
 _VC_.style.backgroundColor = BG_COLOR
 
+#VIRTUAL canvas
 _C_ =  document.createElement('canvas')#document.getElementById('lsd')
-_C_.style.backgroundColor = BG_COLOR
+#_C_.style.backgroundColor = BG_COLOR
 _CTX_ = _C_.getContext('2d')
 
+#DOT ONLY CANVAS
+_DOT_C_ = document.createElement('canvas')
+_DOT_CTX_ =_DOT_C_.getContext('2d')
+_DOT_C_.id = 'dot_canvas'
+_DOT_C_.style.zIndex = _VC_.style.zIndex + 1
+_DOT_C_.style.background = 'transparent'
+#_DOT_CTX_.clearRect(0,0,5000,5000)
+#_DOT_C_.style.opacity = 1
+#_DOT_CTX_.globalCompositeOperation = "destination-out"
 
 
 
 resizeCanvas = () ->
-  _VC_.width = _C_.width = window.innerWidth
-  _VC_.height = _C_.height = window.innerHeight
+  _VC_.style.position = _DOT_C_.style.position = 'absolute'
+
+  if _LOCATION_ is window.document.body
+    d('_LOCATION_ IS document.body')
+    bounds = 
+      top: "0px"
+      left: "0px"
+      width: _LOCATION_.clientWidth 
+      height: _LOCATION_.clientHeight 
+    d(bounds)
+  else
+    bounds = _LOCATION_.getBoundingClientRect()
+  _VC_.width = _C_.width = _DOT_C_.width = bounds.width
+  _VC_.height = _C_.height = _DOT_C_.height = bounds.height
+  _VC_.style.top = _DOT_C_.style.top = bounds.top
+  _VC_.style.left = _DOT_C_.style.left = bounds.left
 
 initWorld = (wins = 0, average_lines = 0) ->
   resizeCanvas()
@@ -55,19 +84,19 @@ d = (msg) ->
   return msg
 
 
-
-
-window.addEventListener('resize', window.startLsd, false)
-
 copy = () ->
   #_VCTX_.clearRect(0,0,_VC_.width, _VC_.height)
   _VCTX_.drawImage(_C_, 0, 0)
 
-window.startLsd = (wins = 0, average_lines = 0) -> 
+window.startLsd = (wins = 0, average_lines = 0, location = _LOCATION_) -> 
+  _LOCATION_ = location 
+  _LOCATION_.appendChild(_VC_)
+  _LOCATION_.appendChild(_DOT_C_)
   initWorld(wins, average_lines)
   #_W_.lines.push(makeLine(10,0,290,350))
   #_W_.lines.push(makeLine(390,0,190,350))
   #_W_.lines.push(makeLine(10,350,90,350))
+  #start_tick
   tick()
 
 tick = () ->
@@ -103,7 +132,7 @@ ragnaroek = (world) ->
     if wins < 0 then wins = 0
     av = _W_.average_lines
 
-  drawDots(world.dots, _CTX_, true)
+  drawDots(world.dots, _DOT_CTX_, true)
   #d('end of game')
   #alert('end of game')
   #d('animate frame ID NOW')
@@ -126,9 +155,9 @@ update = (world) ->
 draw = (world, ctx) ->
   #d('in draw')
   #ctx.clearRect(0, 0, world.w, world.h)
-  _CTX_.fillStyle = BG_COLOR
-  _CTX_.fillRect(0, 0, world.w, world.h)
-  drawDots(world.dots, ctx)
+  ctx.fillStyle = BG_COLOR
+  ctx.fillRect(0, 0, world.w, world.h)
+  drawDots(world.dots, _DOT_CTX_)
   drawLines(world.lines, ctx)
   drawSquare(world.square, ctx)
   drawTempLine(world, ctx)
@@ -145,7 +174,7 @@ writeStuff = (world, ctx) ->
   ctx.font = "12px Verdana";
   ctx.fillText("Level "+world.wins, 2, 12)
   ctx.fillText("Surrender", 2, 26)  
-  drawLine([2,28,64,28], ctx)
+  drawLine([2,28,64,28], ctx, false, 1)
   #ctx.fillText(world.wins+" (Ø "+world.average_lines+")", 2, 12);
   #ctx.fillText(world.wins, 2, 12);
 
@@ -205,34 +234,37 @@ updateDots = (world) ->
 updateLines = (world) ->
   return world
 
-drawDot = (dot, ctx, inverse = false) ->
+drawDot = (dot, dot_ctx, inverse = false) ->
   #ctx.clearRect(dot[0]-50, dot[1]-50, 100, 100)
-
+  #dot_ctx = _DOT_CTX_
   #ctx.fillStyle = BG_COLOR
   #ctx.fillRect(dot[0]-50, dot[1]-50, 100, 100)
-  ctx.beginPath()
+  dot_ctx.clearRect(dot[0]-50, dot[1]-50, 100, 100)
+  dot_ctx.beginPath()
   #ctx.arc(Math.floor(dot[0]), Math.floor(dot[1]), DOT_RADIUS, 0, Math.PI * 2, true)
-  ctx.arc(dot[0], dot[1], DOT_RADIUS, 0, Math.PI * 2, true)
+  dot_ctx.arc(dot[0], dot[1], DOT_RADIUS, 0, Math.PI * 2, true)
 
-  ctx.closePath()
+  dot_ctx.closePath()
   if not inverse
-    ctx.fillStyle = "black"
-    ctx.fill()
+    dot_ctx.fillStyle = "black"
+    dot_ctx.fill()
   else
-    ctx.strokeStyle = "black"
-    ctx.fillStyle = BG_COLOR
-    ctx.fill()
-    ctx.stroke()
+    dot_ctx.strokeStyle = "black"
+    dot_ctx.fillStyle = BG_COLOR
+    dot_ctx.fill()
+    dot_ctx.stroke()
 
 
-drawDots = (dots, ctx, inverse = false) ->
+
+drawDots = (dots, dot_ctx = _DOT_CTX_, inverse = false) ->
   for dot in dots
-    drawDot(dot, ctx, inverse)
+    drawDot(dot, dot_ctx, inverse)
 
-drawLine = (line, ctx, is_temp_line = false) ->
+drawLine = (line, ctx, is_temp_line = false, line_width = LINE_WIDTH) ->
   ctx.beginPath()
   ctx.moveTo(Math.floor(line[0]), Math.floor(line[1]))
   ctx.lineTo(Math.floor(line[2]), Math.floor(line[3]))
+  ctx.lineWidth = line_width
   if not is_temp_line
     #ctx.restore()
     #ctx.setLineDash([0,0])
@@ -241,6 +273,7 @@ drawLine = (line, ctx, is_temp_line = false) ->
     ctx.strokeStyle = "red"
     #ctx.setLineDash([7])
   ctx.stroke()
+  ctx.strokeStyle = "black"
 
 drawLines = (lines, ctx) ->
   for line in lines
@@ -322,9 +355,9 @@ pointOnLineClosestToDot = (dot, line) ->
 
 isDotSquareCollision = (dot, square) ->
   [dx, dy] = dot
-  drawSquare(dot)
+  #drawSquare(dot)
   [sx, sy] = square #note square is always to upper left corner
-  drawSquare(square)
+  #drawSquare(square)
   if dx > sx and dx < sx + SQUARE_SIDE
     if dy > sy and dy < sy + SQUARE_SIDE
       return true
@@ -404,10 +437,14 @@ placePoint = (point, world) ->
 isSurrenderClicked = (point, world = _W_) ->
   [x,y] = point
   if x < 64  and x > 2 and y > 2 and y < 28
-    _W_.end = true
-    _W_.won = false # surrender clicked, so lost
+    world = surrender()
     return true
   return false
+
+surrender = (world = _W_) ->
+  world.end = true
+  world.won = false # surrender clicked, so lost
+  return _W_
 
 
 
@@ -448,18 +485,22 @@ stackToLine = (stack) ->
 
 
 
-
-_VC_.addEventListener('mousedown', (e) -> setStartLinePoint(e))
-_VC_.addEventListener('touchstart', (e) -> d('touchstart');setStartLinePoint(e))
-_VC_.addEventListener('mouseup', (e) -> setFinalLinePoint(e))
-_VC_.addEventListener('touchend', (e) -> d('touchend');d(e);setFinalLinePoint(e))
-_VC_.addEventListener('mousemove', (e) -> setTempLineEndPoint(e))
-_VC_.addEventListener('touchmove', (e) -> setTempLineEndPoint(e))
-_VC_.addEventListener('mouseout', (e) -> onDrawOut(e))
-_VC_.addEventListener('touchleave', (e) -> onDrawOut(e))
-_VC_.addEventListener('touchcancel', (e) -> onDrawOut(e))
+#_DOT_C_
+_DOT_C_.addEventListener('mousedown', (e) -> setStartLinePoint(e))
+_DOT_C_.addEventListener('touchstart', (e) -> d('touchstart');setStartLinePoint(e))
+_DOT_C_.addEventListener('mouseup', (e) -> setFinalLinePoint(e))
+_DOT_C_.addEventListener('touchend', (e) -> d('touchend');d(e);setFinalLinePoint(e))
+_DOT_C_.addEventListener('mousemove', (e) -> setTempLineEndPoint(e))
+_DOT_C_.addEventListener('touchmove', (e) -> setTempLineEndPoint(e))
+_DOT_C_.addEventListener('mouseout', (e) -> onDrawOut(e))
+_DOT_C_.addEventListener('touchleave', (e) -> onDrawOut(e))
+_DOT_C_.addEventListener('touchcancel', (e) -> onDrawOut(e))
 
 window.document.body.addEventListener('touchmove', (e) -> e.preventDefault())
+
+window.addEventListener('resize', () -> 
+  surrender()
+, false)
 
 
 
