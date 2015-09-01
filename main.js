@@ -12,7 +12,7 @@
 
   VELOCITY_X = 0;
 
-  DOT_RADIUS = 3.2;
+  DOT_RADIUS = 3;
 
   DOT_U = 6;
 
@@ -22,7 +22,7 @@
 
   BG_COLOR = '#eee';
 
-  LINE_WIDTH = 1.5;
+  LINE_WIDTH = 1;
 
   _LOCATION_ = window.document.body;
 
