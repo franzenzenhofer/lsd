@@ -14,6 +14,7 @@ BG_COLOR = '#eee'
 LINE_WIDTH = 1
 
 _LOCATION_ = window.document.body
+_LINE_UPDATE_ = true
 
 #visual canvas 
 _VC_ = document.createElement('canvas') #document.getElementById('lsd')
@@ -42,13 +43,12 @@ resizeCanvas = () ->
   _VC_.style.position = _DOT_C_.style.position = 'absolute'
 
   if _LOCATION_ is window.document.body
-    d('_LOCATION_ IS document.body')
+    #d('_LOCATION_ IS document.body')
     bounds = 
       top: "0px"
       left: "0px"
       width: _LOCATION_.clientWidth 
       height: _LOCATION_.clientHeight 
-    d(bounds)
   else
     bounds = _LOCATION_.getBoundingClientRect()
   _VC_.width = _C_.width = _DOT_C_.width = bounds.width
@@ -155,14 +155,19 @@ update = (world) ->
 draw = (world, ctx) ->
   #d('in draw')
   #ctx.clearRect(0, 0, world.w, world.h)
-  ctx.fillStyle = BG_COLOR
-  ctx.fillRect(0, 0, world.w, world.h)
+
   drawDots(world.dots, _DOT_CTX_)
-  drawLines(world.lines, ctx)
-  drawSquare(world.square, ctx)
-  drawTempLine(world, ctx)
-  writeStuff(world, ctx)
-  copy() #_VCTX_.drawImage(_C_, 0, 0)
+  if _LINE_UPDATE_ is true
+    d('full canvas update')
+    _LINE_UPDATE_ = false 
+    ctx.fillStyle = BG_COLOR
+    ctx.fillRect(0, 0, world.w, world.h)
+    drawLines(world.lines, ctx)
+    drawSquare(world.square, ctx)
+    drawTempLine(world, ctx)
+    writeStuff(world, ctx)
+    copy() #_VCTX_.drawImage(_C_, 0, 0)
+
 
 randomInt = (min,max) ->
   min = Math.floor(min)
@@ -190,6 +195,7 @@ makeDot = (x = Math.floor(_W_.w/2),y = 10) ->
   return a
 
 makeLine = (x1, y1, x2, y2) ->
+  _LINE_UPDATE_ = true
   return [x1,y1,x2,y2]
 
 createLine = (x1, y1, x2, y2, world = _W_) ->
@@ -282,6 +288,7 @@ drawLines = (lines, ctx) ->
   
 drawTempLine = (world, ctx) ->
   if world.pointer_down is true and world.line_point_stack[0] and world.temp_line_end_point
+    #_LINE_UPDATE_ = true
     [sx, sy] = world.line_point_stack[0]
     [tx, ty] = world.temp_line_end_point
     drawLine([sx,sy,tx,ty], ctx, true)
@@ -290,8 +297,7 @@ drawTempLine = (world, ctx) ->
 
 
 makeSquare = (x = randomInt(SQUARE_SIDE+2, _W_.w-(SQUARE_SIDE+2)), y = randomInt((SQUARE_SIDE+2), _W_.h-(SQUARE_SIDE+2))) -> 
-  #d(x)
-  #d(y)
+  _LINE_UPDATE_ = true
   return [x,y]
 
 drawSquare = (p, ctx = _CTX_, fill = false) ->
@@ -392,20 +398,14 @@ velocityBound = (dot) ->
   return dot
 
 bounceDot = (dot, line) ->
-  #alert('hit')
-  #d('hit')
+
   bounce_line_normal = bounceLineNormal(dot, line)
-  #d('bounce line normal')
-  #d(bounce_line_normal)
-  #d('dot.velocity')
-  #d(dot.velocity)
+
   dot_to_line_vector_product  = vectorPointProduct(dot.velocity, bounce_line_normal)
 
-  #d('dot.velocity');d(dot.velocity)
-  #d('dot_to_line_vector_product');d(dot_to_line_vector_product)
-  #d('bounce_line_normal');d(bounce_line_normal)
   dot.velocity.x = dot.velocity.x - (2 * dot_to_line_vector_product * bounce_line_normal.x)
   dot.velocity.y = dot.velocity.y - (2 * dot_to_line_vector_product * bounce_line_normal.y)
+  
   #check if y velcity still ok
   dot = velocityBound(dot)
   return dot
@@ -465,14 +465,15 @@ setFinalLinePoint = (e) ->
   _W_.pointer_down = false
 
 setTempLineEndPoint = (e) ->
+  #_LINE_UPDATE_ = true
   e.preventDefault()
-  _W_.temp_line_end_point = getInputCoordinates(e)
+  if _W_.pointer_down is true
+    _LINE_UPDATE_ = true
+    _W_.temp_line_end_point = getInputCoordinates(e)
 
 onDrawOut = (e) ->
   e.preventDefault() 
   setFinalLinePoint(e)
-
-
 
 
 stackToLine = (stack) ->
@@ -487,9 +488,9 @@ stackToLine = (stack) ->
 
 #_DOT_C_
 _DOT_C_.addEventListener('mousedown', (e) -> setStartLinePoint(e))
-_DOT_C_.addEventListener('touchstart', (e) -> d('touchstart');setStartLinePoint(e))
+_DOT_C_.addEventListener('touchstart', (e) -> setStartLinePoint(e))
 _DOT_C_.addEventListener('mouseup', (e) -> setFinalLinePoint(e))
-_DOT_C_.addEventListener('touchend', (e) -> d('touchend');d(e);setFinalLinePoint(e))
+_DOT_C_.addEventListener('touchend', (e) -> setFinalLinePoint(e))
 _DOT_C_.addEventListener('mousemove', (e) -> setTempLineEndPoint(e))
 _DOT_C_.addEventListener('touchmove', (e) -> setTempLineEndPoint(e))
 _DOT_C_.addEventListener('mouseout', (e) -> onDrawOut(e))
