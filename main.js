@@ -2,7 +2,7 @@
 (function() {
   var BG_COLOR, DOT_RADIUS, DOT_U, GRAVITY_Y, LINE_WIDTH, SQUARE_SIDE, VELOCITY_X, VELOCITY_Y, _ANIMATION_FRAME_ID_, _CTX_, _C_, _DEBUG_, _DOT_CTX_, _DOT_C_, _LINE_UPDATE_, _LOCATION_, _VCTX_, _VC_, _W_, applyGravityToDot, bounceDot, bounceLineNormal, copy, createLine, createRandomLine, d, distance, draw, drawDot, drawDots, drawLine, drawLines, drawSquare, drawTempLine, getInputCoordinates, getLineLength, initWorld, isDotLineCollison, isDotSquareCollision, isOutOfBounds, isSurrenderClicked, magnitude, makeDot, makeLine, makeSquare, makeVector, makeVectorByLine, moveDot, onDrawOut, placePoint, pointOnLineClosestToDot, ragnaroek, randomInt, resizeCanvas, setFinalLinePoint, setStartLinePoint, setTempLineEndPoint, stackToLine, surrender, tick, unitVector, update, updateDots, updateLines, vectorPointProduct, velocityBound, writeStuff;
 
-  _DEBUG_ = true;
+  _DEBUG_ = false;
 
   _W_ = {};
 
@@ -35,6 +35,8 @@
   _VC_.style.backgroundColor = BG_COLOR;
 
   _C_ = document.createElement('canvas');
+
+  _C_.style.backgroundColor = BG_COLOR;
 
   _CTX_ = _C_.getContext('2d');
 
@@ -93,7 +95,7 @@
     if (_W_.wins > 0) {
       results = [];
       for (k = 1, ref = _W_.wins; 1 <= ref ? k <= ref : k >= ref; 1 <= ref ? k++ : k--) {
-        results.push(createLine(randomInt(0, _W_.w), randomInt(0, _W_.h), randomInt(0, _W_.w), randomInt(0, _W_.h), _W_));
+        results.push(createRandomLine(_W_));
       }
       return results;
     }
@@ -156,7 +158,7 @@
       }
       av = _W_.average_lines;
     }
-    drawDots(world.dots, _DOT_CTX_, true);
+    drawDots(world.dots, _DOT_CTX_, BG_COLOR);
     if (_W_.end === true) {
       if (_W_.won === false) {
         return setTimeout(startLsd, 200, wins, av);
@@ -175,7 +177,6 @@
   draw = function(world, ctx) {
     drawDots(world.dots, _DOT_CTX_);
     if (_LINE_UPDATE_ === true) {
-      d('full canvas update');
       _LINE_UPDATE_ = false;
       ctx.fillStyle = BG_COLOR;
       ctx.fillRect(0, 0, world.w, world.h);
@@ -276,37 +277,32 @@
     return world;
   };
 
-  drawDot = function(dot, dot_ctx, inverse) {
-    if (inverse == null) {
-      inverse = false;
+  drawDot = function(dot, dot_ctx, fill_style) {
+    if (fill_style == null) {
+      fill_style = "black";
     }
-    dot_ctx.clearRect(dot[0] - 50, dot[1] - 50, 100, 100);
+    dot_ctx.clearRect(dot[0] - 8, dot[1] - 8, 16, 16);
     dot_ctx.beginPath();
     dot_ctx.arc(dot[0], dot[1], DOT_RADIUS, 0, Math.PI * 2, true);
     dot_ctx.closePath();
-    if (!inverse) {
-      dot_ctx.fillStyle = "black";
-      return dot_ctx.fill();
-    } else {
-      dot_ctx.strokeStyle = "black";
-      dot_ctx.fillStyle = BG_COLOR;
-      dot_ctx.fill();
-      return dot_ctx.stroke();
-    }
+    dot_ctx.strokeStyle = "black";
+    dot_ctx.fillStyle = fill_style;
+    dot_ctx.fill();
+    return dot_ctx.stroke();
   };
 
-  drawDots = function(dots, dot_ctx, inverse) {
+  drawDots = function(dots, dot_ctx, fill_style) {
     var dot, k, len, results;
     if (dot_ctx == null) {
       dot_ctx = _DOT_CTX_;
     }
-    if (inverse == null) {
-      inverse = false;
+    if (fill_style == null) {
+      fill_style = "black";
     }
     results = [];
     for (k = 0, len = dots.length; k < len; k++) {
       dot = dots[k];
-      results.push(drawDot(dot, dot_ctx, inverse));
+      results.push(drawDot(dot, dot_ctx, fill_style));
     }
     return results;
   };

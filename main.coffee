@@ -1,6 +1,6 @@
 
 
-_DEBUG_ = true
+_DEBUG_ = false
 _W_ = {}
 _ANIMATION_FRAME_ID_ = 0
 
@@ -19,12 +19,11 @@ _LINE_UPDATE_ = true
 #visual canvas 
 _VC_ = document.createElement('canvas') #document.getElementById('lsd')
 _VCTX_ = _VC_.getContext('2d')
-#_VC_.style.backgroundColor = 'green'
 _VC_.style.backgroundColor = BG_COLOR
 
 #VIRTUAL canvas
 _C_ =  document.createElement('canvas')#document.getElementById('lsd')
-#_C_.style.backgroundColor = BG_COLOR
+_C_.style.backgroundColor = BG_COLOR
 _CTX_ = _C_.getContext('2d')
 
 #DOT ONLY CANVAS
@@ -33,9 +32,7 @@ _DOT_CTX_ =_DOT_C_.getContext('2d')
 _DOT_C_.id = 'dot_canvas'
 _DOT_C_.style.zIndex = _VC_.style.zIndex + 1
 _DOT_C_.style.background = 'transparent'
-#_DOT_CTX_.clearRect(0,0,5000,5000)
-#_DOT_C_.style.opacity = 1
-#_DOT_CTX_.globalCompositeOperation = "destination-out"
+
 
 
 
@@ -51,6 +48,7 @@ resizeCanvas = () ->
       height: _LOCATION_.clientHeight 
   else
     bounds = _LOCATION_.getBoundingClientRect()
+  
   _VC_.width = _C_.width = _DOT_C_.width = bounds.width
   _VC_.height = _C_.height = _DOT_C_.height = bounds.height
   _VC_.style.top = _DOT_C_.style.top = bounds.top
@@ -75,9 +73,7 @@ initWorld = (wins = 0, average_lines = 0) ->
 
   if _W_.wins > 0
     for [1 .. _W_.wins]
-      createLine(randomInt(0, _W_.w),randomInt(0, _W_.h),randomInt(0, _W_.w),randomInt(0, _W_.h),_W_)
-
-
+      createRandomLine(_W_)
 
 d = (msg) ->
   console.log(msg) if _DEBUG_ 
@@ -85,7 +81,6 @@ d = (msg) ->
 
 
 copy = () ->
-  #_VCTX_.clearRect(0,0,_VC_.width, _VC_.height)
   _VCTX_.drawImage(_C_, 0, 0)
 
 window.startLsd = (wins = 0, average_lines = 0, location = _LOCATION_) -> 
@@ -93,10 +88,6 @@ window.startLsd = (wins = 0, average_lines = 0, location = _LOCATION_) ->
   _LOCATION_.appendChild(_VC_)
   _LOCATION_.appendChild(_DOT_C_)
   initWorld(wins, average_lines)
-  #_W_.lines.push(makeLine(10,0,290,350))
-  #_W_.lines.push(makeLine(390,0,190,350))
-  #_W_.lines.push(makeLine(10,350,90,350))
-  #start_tick
   tick()
 
 tick = () ->
@@ -105,21 +96,11 @@ tick = () ->
     update(_W_)
     draw(_W_, _CTX_)
   else
-    #debugger
-    #d('hiho')
-    #d('_W_.end = true')
     ragnaroek(_W_)
     copy()
     window.cancelAnimationFrame(_ANIMATION_FRAME_ID_)
-  
-  
-  #check here if an end event did happen????
-  #debugger
 
 ragnaroek = (world) ->
-  #alert('end')
-  #_END_ = true
-
   if world.won is true
     drawSquare(world.square, _CTX_, true)
     wins = _W_.wins+1
@@ -132,12 +113,8 @@ ragnaroek = (world) ->
     if wins < 0 then wins = 0
     av = _W_.average_lines
 
-  drawDots(world.dots, _DOT_CTX_, true)
-  #d('end of game')
-  #alert('end of game')
-  #d('animate frame ID NOW')
-  #d(_ANIMATION_FRAME_ID_)
-  #d('animate frame ID NOW END')
+  drawDots(world.dots, _DOT_CTX_, BG_COLOR)
+
   if _W_.end is true
     if _W_.won is false #means surrender or lost
       setTimeout(startLsd, 200, wins, av)
@@ -147,18 +124,12 @@ ragnaroek = (world) ->
 update = (world) ->
   world = updateDots(world)
   stackToLine(world.line_point_stack)
-
   return world
-  #world = updateLines(world)
-  #world = createNewDot(world)
 
 draw = (world, ctx) ->
-  #d('in draw')
-  #ctx.clearRect(0, 0, world.w, world.h)
-
   drawDots(world.dots, _DOT_CTX_)
   if _LINE_UPDATE_ is true
-    d('full canvas update')
+    #d('full canvas update')
     _LINE_UPDATE_ = false 
     ctx.fillStyle = BG_COLOR
     ctx.fillRect(0, 0, world.w, world.h)
@@ -180,13 +151,7 @@ writeStuff = (world, ctx) ->
   ctx.fillText("Level "+world.wins, 2, 12)
   ctx.fillText("Surrender", 2, 26)  
   drawLine([2,28,64,28], ctx, false, 1)
-  #ctx.fillText(world.wins+" (Ø "+world.average_lines+")", 2, 12);
-  #ctx.fillText(world.wins, 2, 12);
 
-#class Dot extends Array
-#  @vx = VELOCITY_X
-#  @vy = 
-#x=Math.floor(_W_.h/2)Ø "+world.aver  +"
 makeDot = (x = Math.floor(_W_.w/2),y = 10) ->
   a = [x,y]
   a.velocity  = {}
@@ -215,9 +180,6 @@ createRandomLine = (world = _W_) ->
 
     createLine(x1, y1, x2, y2,_W_)
 
-
-
-
 updateDots = (world) ->
   for dot, i in world.dots
     for line, j in world.lines
@@ -240,31 +202,21 @@ updateDots = (world) ->
 updateLines = (world) ->
   return world
 
-drawDot = (dot, dot_ctx, inverse = false) ->
-  #ctx.clearRect(dot[0]-50, dot[1]-50, 100, 100)
-  #dot_ctx = _DOT_CTX_
-  #ctx.fillStyle = BG_COLOR
-  #ctx.fillRect(dot[0]-50, dot[1]-50, 100, 100)
-  dot_ctx.clearRect(dot[0]-50, dot[1]-50, 100, 100)
+drawDot = (dot, dot_ctx, fill_style = "black") ->
+  dot_ctx.clearRect(dot[0]-8, dot[1]-8, 16, 16)
   dot_ctx.beginPath()
-  #ctx.arc(Math.floor(dot[0]), Math.floor(dot[1]), DOT_RADIUS, 0, Math.PI * 2, true)
   dot_ctx.arc(dot[0], dot[1], DOT_RADIUS, 0, Math.PI * 2, true)
-
   dot_ctx.closePath()
-  if not inverse
-    dot_ctx.fillStyle = "black"
-    dot_ctx.fill()
-  else
-    dot_ctx.strokeStyle = "black"
-    dot_ctx.fillStyle = BG_COLOR
-    dot_ctx.fill()
-    dot_ctx.stroke()
+  dot_ctx.strokeStyle = "black"
+  dot_ctx.fillStyle = fill_style
+  dot_ctx.fill()
+  dot_ctx.stroke()
 
 
 
-drawDots = (dots, dot_ctx = _DOT_CTX_, inverse = false) ->
+drawDots = (dots, dot_ctx = _DOT_CTX_, fill_style = "black") ->
   for dot in dots
-    drawDot(dot, dot_ctx, inverse)
+    drawDot(dot, dot_ctx, fill_style)
 
 drawLine = (line, ctx, is_temp_line = false, line_width = LINE_WIDTH) ->
   ctx.beginPath()
