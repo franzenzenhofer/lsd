@@ -483,6 +483,9 @@
     dot_to_line_vector_product = vectorPointProduct(dot.velocity, bounce_line_normal);
     dot.velocity.x = dot.velocity.x - (2 * dot_to_line_vector_product * bounce_line_normal.x);
     dot.velocity.y = dot.velocity.y - (2 * dot_to_line_vector_product * bounce_line_normal.y);
+    while (isDotLineCollison(dot, line)) {
+      moveDot(dot);
+    }
     dot = velocityBound(dot);
     return dot;
   };

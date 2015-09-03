@@ -357,11 +357,15 @@ bounceDot = (dot, line) ->
 
   dot.velocity.x = dot.velocity.x - (2 * dot_to_line_vector_product * bounce_line_normal.x)
   dot.velocity.y = dot.velocity.y - (2 * dot_to_line_vector_product * bounce_line_normal.y)
-  
+  #method to make sure dot does not get stuck
+
+  while isDotLineCollison(dot, line)
+    moveDot(dot)
+
   #check if y velcity still ok
   dot = velocityBound(dot)
   return dot
-  #method to make sure dot does not get stuck
+  
 
 bounceLineNormal = (dot, line) ->
   dot_to_closest_point_on_line_vector = 
