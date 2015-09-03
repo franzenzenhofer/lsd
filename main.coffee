@@ -410,7 +410,7 @@ placePoint = (point, world) ->
 
 isSurrenderClicked = (point, world = _W_) ->
   [x,y] = point
-  if x < 64  and x > 2 and y > 0 and y < 26
+  if x < 64 and y < 28
     world = surrender()
     return true
   return false
