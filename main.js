@@ -195,11 +195,14 @@
   };
 
   writeStuff = function(world, ctx) {
+    if (world == null) {
+      world = _W_;
+    }
     ctx.fillStyle = "black";
     ctx.font = "12px Verdana";
     ctx.fillText("Level " + world.wins, 2, 12);
-    ctx.fillText("Surrender", 2, 26);
-    return drawLine([2, 28, 64, 28], ctx, false, 1);
+    ctx.fillText("Surrender", world.w - 66, 12);
+    return drawLine([2, 14, 64, 14], ctx, false, 1);
   };
 
   makeDot = function(x, y) {
@@ -468,11 +471,11 @@
     var pref_y;
     pref_y = dot.velocity.y;
     dot.velocity.y = dot.velocity.y + GRAVITY_Y;
-    if (dot.velovity.y === 0 && dot.velovity.x === 0) {
+    if (dot.velocity.y === 0 && dot.velocity.x === 0) {
       if (pref_y >= 0) {
-        dot.velovity.y + GRAVITY_Y;
+        dot.velocity.y + GRAVITY_Y;
       } else {
-        dot.velovity.y - GRAVITY_Y;
+        dot.velocity.y - GRAVITY_Y;
       }
     }
     dot = velocityBound(dot);

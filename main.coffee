@@ -145,12 +145,12 @@ randomInt = (min,max) ->
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min + 1)) + min
 
-writeStuff = (world, ctx) ->
+writeStuff = (world = _W_, ctx) ->
   ctx.fillStyle = "black";
   ctx.font = "12px Verdana";
   ctx.fillText("Level "+world.wins, 2, 12)
-  ctx.fillText("Surrender", 2, 26)  
-  drawLine([2,28,64,28], ctx, false, 1)
+  ctx.fillText("Surrender", world.w-66, 12)  
+  drawLine([2,14,64,14], ctx, false, 1)
 
 makeDot = (x = Math.floor(_W_.w/2),y = 10) ->
   a = [x,y]
@@ -343,11 +343,11 @@ moveDot = (dot) ->
 applyGravityToDot = (dot) ->
   pref_y = dot.velocity.y
   dot.velocity.y = dot.velocity.y + GRAVITY_Y
-  if dot.velovity.y is 0 and dot.velovity.x is 0
+  if dot.velocity.y is 0 and dot.velocity.x is 0
     if pref_y >= 0
-      dot.velovity.y + GRAVITY_Y
+      dot.velocity.y + GRAVITY_Y
     else 
-      dot.velovity.y - GRAVITY_Y
+      dot.velocity.y - GRAVITY_Y
   dot = velocityBound(dot)
   return dot
 
