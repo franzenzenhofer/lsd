@@ -148,9 +148,12 @@ randomInt = (min,max) ->
 writeStuff = (world = _W_, ctx) ->
   ctx.fillStyle = "black";
   ctx.font = "12px Verdana";
-  ctx.fillText("Level "+world.wins, 2, 12)
-  ctx.fillText("Surrender", world.w-66, 12)  
-  drawLine([2,14,64,14], ctx, false, 1)
+  if world.wins < 10
+    ctx.fillText("Level "+world.wins, world.w-48, 12)
+  else
+    ctx.fillText("Level "+world.wins, world.w-53, 12)
+  ctx.fillText("Surrender", 2, 12)  
+  drawLine([2,14,63,14], ctx, false, 1)
 
 makeDot = (x = Math.floor(_W_.w/2),y = 10) ->
   a = [x,y]
@@ -181,11 +184,18 @@ createRandomLine = (world = _W_) ->
     createLine(x1, y1, x2, y2,_W_)
 
 updateDots = (world) ->
+  last_collision_line = null 
+  last_collision_dot = null 
   for dot, i in world.dots
     for line, j in world.lines
       if isDotLineCollison(dot, line)
         bounceDot(dot, line)
+        last_collision_line = line
+        last_collision_dot = dot 
     dot = moveDot(dot)
+    if last_collision_line and last_collision_dot and isDotLineCollison(last_collision_dot, last_collision_line)
+      #d('dot stuck')
+      moveDot(dot, 0.5)
     if isDotSquareCollision(dot, _W_.square)
       #endGame(true, true) #only set the variable here
       world.end = true
@@ -203,7 +213,7 @@ updateLines = (world) ->
   return world
 
 drawDot = (dot, dot_ctx, fill_style = "black") ->
-  dot_ctx.clearRect(dot[0]-8, dot[1]-8, 16, 16)
+  dot_ctx.clearRect(dot[0]-15, dot[1]-15, 30, 30)
   dot_ctx.beginPath()
   dot_ctx.arc(dot[0], dot[1], DOT_RADIUS, 0, Math.PI * 2, true)
   dot_ctx.closePath()
@@ -330,24 +340,27 @@ isOutOfBounds = (dot, world) ->
 
 
 isDotLineCollison = (dot, line) ->
+  
   closest = pointOnLineClosestToDot(dot, line)
   r = distance(dot, closest) < DOT_RADIUS
+  #if r is true
+  #  d(dot)
   return r
 
-moveDot = (dot) ->
-  dot[0] = dot[0] + dot.velocity.x
-  dot[1] = dot[1] + dot.velocity.y
+moveDot = (dot, factor = 1) ->
+  dot[0] = dot[0] + (dot.velocity.x * factor)
+  dot[1] = dot[1] + (dot.velocity.y * factor)
   dot = applyGravityToDot(dot)
   return dot
 
 applyGravityToDot = (dot) ->
   pref_y = dot.velocity.y
   dot.velocity.y = dot.velocity.y + GRAVITY_Y
-  if dot.velocity.y is 0 and dot.velocity.x is 0
-    if pref_y >= 0
-      dot.velocity.y + GRAVITY_Y
+  if dot.velocity.y is 0 and dot.velocity.x is 0 
+   if pref_y >= 0
+     dot.velocity.y - (GRAVITY_Y*0.01)
     else 
-      dot.velocity.y - GRAVITY_Y
+      dot.velocity.y + (GRAVITY_Y*0.01)
   dot = velocityBound(dot)
   return dot
 
@@ -365,8 +378,7 @@ bounceDot = (dot, line) ->
   dot.velocity.y = dot.velocity.y - (2 * dot_to_line_vector_product * bounce_line_normal.y)
   #method to make sure dot does not get stuck
 
-  while isDotLineCollison(dot, line)
-    moveDot(dot)
+
 
   #check if y velcity still ok
   dot = velocityBound(dot)
@@ -381,8 +393,8 @@ bounceLineNormal = (dot, line) ->
 
 getInputCoordinates = (e) ->
   rect = _VC_.getBoundingClientRect()
-  ex = e.pageX or e?.touches[0]?.clientX
-  ey = e.pageY or e?.touches[0]?.clientY
+  ex = e.pageX or e?.touches?[0]?.clientX
+  ey = e.pageY or e?.touches?[0]?.clientY
   if e.type is 'touchend'  #if ex is 0 and ex is 0 #and e?.touches?.length is 0
     [ex, ey] = _W_.temp_line_end_point
     _W_.temp_line_end_point = null
@@ -398,7 +410,7 @@ placePoint = (point, world) ->
 
 isSurrenderClicked = (point, world = _W_) ->
   [x,y] = point
-  if x < 64  and x > 2 and y > 2 and y < 28
+  if x < 64  and x > 2 and y > 0 and y < 20
     world = surrender()
     return true
   return false

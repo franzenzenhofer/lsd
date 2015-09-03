@@ -200,9 +200,13 @@
     }
     ctx.fillStyle = "black";
     ctx.font = "12px Verdana";
-    ctx.fillText("Level " + world.wins, 2, 12);
-    ctx.fillText("Surrender", world.w - 66, 12);
-    return drawLine([2, 14, 64, 14], ctx, false, 1);
+    if (world.wins < 10) {
+      ctx.fillText("Level " + world.wins, world.w - 48, 12);
+    } else {
+      ctx.fillText("Level " + world.wins, world.w - 53, 12);
+    }
+    ctx.fillText("Surrender", 2, 12);
+    return drawLine([2, 14, 63, 14], ctx, false, 1);
   };
 
   makeDot = function(x, y) {
@@ -252,7 +256,9 @@
   };
 
   updateDots = function(world) {
-    var dot, i, j, k, len, len1, line, m, ref, ref1;
+    var dot, i, j, k, last_collision_dot, last_collision_line, len, len1, line, m, ref, ref1;
+    last_collision_line = null;
+    last_collision_dot = null;
     ref = world.dots;
     for (i = k = 0, len = ref.length; k < len; i = ++k) {
       dot = ref[i];
@@ -261,9 +267,14 @@
         line = ref1[j];
         if (isDotLineCollison(dot, line)) {
           bounceDot(dot, line);
+          last_collision_line = line;
+          last_collision_dot = dot;
         }
       }
       dot = moveDot(dot);
+      if (last_collision_line && last_collision_dot && isDotLineCollison(last_collision_dot, last_collision_line)) {
+        moveDot(dot, 0.5);
+      }
       if (isDotSquareCollision(dot, _W_.square)) {
         world.end = true;
         world.won = true;
@@ -284,7 +295,7 @@
     if (fill_style == null) {
       fill_style = "black";
     }
-    dot_ctx.clearRect(dot[0] - 8, dot[1] - 8, 16, 16);
+    dot_ctx.clearRect(dot[0] - 15, dot[1] - 15, 30, 30);
     dot_ctx.beginPath();
     dot_ctx.arc(dot[0], dot[1], DOT_RADIUS, 0, Math.PI * 2, true);
     dot_ctx.closePath();
@@ -460,9 +471,12 @@
     return r;
   };
 
-  moveDot = function(dot) {
-    dot[0] = dot[0] + dot.velocity.x;
-    dot[1] = dot[1] + dot.velocity.y;
+  moveDot = function(dot, factor) {
+    if (factor == null) {
+      factor = 1;
+    }
+    dot[0] = dot[0] + (dot.velocity.x * factor);
+    dot[1] = dot[1] + (dot.velocity.y * factor);
     dot = applyGravityToDot(dot);
     return dot;
   };
@@ -473,9 +487,9 @@
     dot.velocity.y = dot.velocity.y + GRAVITY_Y;
     if (dot.velocity.y === 0 && dot.velocity.x === 0) {
       if (pref_y >= 0) {
-        dot.velocity.y + GRAVITY_Y;
+        dot.velocity.y - (GRAVITY_Y * 0.01);
       } else {
-        dot.velocity.y - GRAVITY_Y;
+        dot.velocity.y + (GRAVITY_Y * 0.01);
       }
     }
     dot = velocityBound(dot);
@@ -495,9 +509,6 @@
     dot_to_line_vector_product = vectorPointProduct(dot.velocity, bounce_line_normal);
     dot.velocity.x = dot.velocity.x - (2 * dot_to_line_vector_product * bounce_line_normal.x);
     dot.velocity.y = dot.velocity.y - (2 * dot_to_line_vector_product * bounce_line_normal.y);
-    while (isDotLineCollison(dot, line)) {
-      moveDot(dot);
-    }
     dot = velocityBound(dot);
     return dot;
   };
@@ -509,12 +520,12 @@
   };
 
   getInputCoordinates = function(e) {
-    var ex, ey, rect, ref, ref1, ref2, x, y;
+    var ex, ey, rect, ref, ref1, ref2, ref3, ref4, x, y;
     rect = _VC_.getBoundingClientRect();
-    ex = e.pageX || (e != null ? (ref = e.touches[0]) != null ? ref.clientX : void 0 : void 0);
-    ey = e.pageY || (e != null ? (ref1 = e.touches[0]) != null ? ref1.clientY : void 0 : void 0);
+    ex = e.pageX || (e != null ? (ref = e.touches) != null ? (ref1 = ref[0]) != null ? ref1.clientX : void 0 : void 0 : void 0);
+    ey = e.pageY || (e != null ? (ref2 = e.touches) != null ? (ref3 = ref2[0]) != null ? ref3.clientY : void 0 : void 0 : void 0);
     if (e.type === 'touchend') {
-      ref2 = _W_.temp_line_end_point, ex = ref2[0], ey = ref2[1];
+      ref4 = _W_.temp_line_end_point, ex = ref4[0], ey = ref4[1];
       _W_.temp_line_end_point = null;
     }
     x = ex - _VC_.offsetLeft;
@@ -532,7 +543,7 @@
       world = _W_;
     }
     x = point[0], y = point[1];
-    if (x < 64 && x > 2 && y > 2 && y < 28) {
+    if (x < 64 && x > 2 && y > 0 && y < 20) {
       world = surrender();
       return true;
     }
