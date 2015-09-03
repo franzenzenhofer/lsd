@@ -16,7 +16,7 @@
 
   DOT_U = 6;
 
-  GRAVITY_Y = 0.0145;
+  GRAVITY_Y = 0.0138;
 
   SQUARE_SIDE = 35;
 
