@@ -543,7 +543,7 @@
       world = _W_;
     }
     x = point[0], y = point[1];
-    if (x < 64 && x > 2 && y > 0 && y < 20) {
+    if (x < 64 && x > 2 && y > 0 && y < 26) {
       world = surrender();
       return true;
     }
