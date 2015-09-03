@@ -465,7 +465,16 @@
   };
 
   applyGravityToDot = function(dot) {
+    var pref_y;
+    pref_y = dot.velocity.y;
     dot.velocity.y = dot.velocity.y + GRAVITY_Y;
+    if (dot.velovity.y === 0 && dot.velovity.x === 0) {
+      if (pref_y >= 0) {
+        dot.velovity.y + GRAVITY_Y;
+      } else {
+        dot.velovity.y - GRAVITY_Y;
+      }
+    }
     dot = velocityBound(dot);
     return dot;
   };
