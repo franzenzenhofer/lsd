@@ -82,8 +82,8 @@
     _VC_.style.top = _DOT_C_.style.top = bounds.top;
     _VC_.style.left = _DOT_C_.style.left = bounds.left;
     _SURRENDER_BUTTON_.style.position = 'absolute';
-    _SURRENDER_BUTTON_.style.top = 2 + parseInt(_VC_.style.top);
-    return _SURRENDER_BUTTON_.style.right = 2 + parseInt(_VC_.style.left);
+    _SURRENDER_BUTTON_.style.top = 3 + parseInt(_VC_.style.top);
+    return _SURRENDER_BUTTON_.style.left = parseInt(_VC_.width - 86);
   };
 
   initWorld = function(wins, average_lines) {
@@ -592,7 +592,7 @@
       world = _W_;
     }
     x = point[0], y = point[1];
-    if (x > (world.w - 65) && y < 38) {
+    if (x > (world.w - 80) && y < 38) {
       world = surrender();
       return true;
     }

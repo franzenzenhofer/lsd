@@ -85,8 +85,8 @@ resizeCanvas = () ->
   _VC_.style.left = _DOT_C_.style.left = bounds.left
 
   _SURRENDER_BUTTON_.style.position = 'absolute'
-  _SURRENDER_BUTTON_.style.top = 2 + parseInt(_VC_.style.top)
-  _SURRENDER_BUTTON_.style.right = 2 + parseInt(_VC_.style.left)
+  _SURRENDER_BUTTON_.style.top = 3 + parseInt(_VC_.style.top)
+  _SURRENDER_BUTTON_.style.left = parseInt(_VC_.width-86)
   #console.log(_SURRENDER_BUTTON_)
 
 initWorld = (wins = 0, average_lines = 0) ->
@@ -504,7 +504,7 @@ placePoint = (point, world) ->
 
 isSurrenderClicked = (point, world = _W_) ->
   [x,y] = point
-  if x > (world.w-65) and y < 38
+  if x > (world.w-80) and y < 38
     world = surrender()
     return true
   return false
