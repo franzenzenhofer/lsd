@@ -1,6 +1,7 @@
 
 
 _DEBUG_ = false
+_IF_FIRST_TIME_EVER_ = true
 _W_ = {}
 _ANIMATION_FRAME_ID_ = 0
 
@@ -10,7 +11,7 @@ DOT_RADIUS = 3
 DOT_U = 6
 GRAVITY_Y = 0.0138
 SQUARE_SIDE = 35
-BG_COLOR = '#eee'
+BG_COLOR = '#ececec'
 LINE_WIDTH = 1
 
 _LOCATION_ = window.document.body
@@ -18,6 +19,7 @@ _LINE_UPDATE_ = true
 
 #visual canvas 
 _VC_ = document.createElement('canvas') #document.getElementById('lsd')
+_VC_.id = 'vc'
 _VCTX_ = _VC_.getContext('2d')
 _VC_.style.backgroundColor = BG_COLOR
 
@@ -34,6 +36,34 @@ _DOT_C_.style.zIndex = _VC_.style.zIndex + 1
 _DOT_C_.style.background = 'transparent'
 
 
+_SURRENDER_BUTTON_ = document.createElement('button')
+_SURRENDER_BUTTON_.id = 'surrender_button'
+_SURRENDER_BUTTON_.innerHTML = 'Surrender'
+
+_BUTTONSTYLE_ = document.createElement('style')
+_BUTTONSTYLE_.innerText = '#surrender_button {
+  display: inline-block;
+  position: relative;
+  color: #888;
+  text-shadow: 0 1px 0 rgba(255,255,255, 0.8);
+  text-decoration: none;
+  text-align: center;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: helvetica, arial, sans-serif;
+  border-radius: 4px;
+  border: 1px solid #bcbcbc;
+
+  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+
+  background-image: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(239,239,239,1) 60%,rgba(225,223,226,1) 100%);
+  background-image: -moz-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(239,239,239,1) 60%,rgba(225,223,226,1) 100%);
+  background-image: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(239,239,239,1) 60%,rgba(225,223,226,1) 100%);
+  background-image: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(239,239,239,1) 60%,rgba(225,223,226,1) 100%);
+  background-image: linear-gradient(top, rgba(255,255,255,1) 0%,rgba(239,239,239,1) 60%,rgba(225,223,226,1) 100%);
+}'
 
 
 resizeCanvas = () ->
@@ -44,8 +74,8 @@ resizeCanvas = () ->
     bounds = 
       top: "0px"
       left: "0px"
-      width: _LOCATION_.clientWidth 
-      height: _LOCATION_.clientHeight 
+      width: _LOCATION_.clientWidth-1 
+      height: _LOCATION_.clientHeight-1 
   else
     bounds = _LOCATION_.getBoundingClientRect()
   
@@ -53,6 +83,10 @@ resizeCanvas = () ->
   _VC_.height = _C_.height = _DOT_C_.height = bounds.height
   _VC_.style.top = _DOT_C_.style.top = bounds.top
   _VC_.style.left = _DOT_C_.style.left = bounds.left
+
+  _SURRENDER_BUTTON_.style.position = 'absolute'
+  _SURRENDER_BUTTON_.style.top = '2px'
+  _SURRENDER_BUTTON_.style.left = '2px'
 
 initWorld = (wins = 0, average_lines = 0) ->
   resizeCanvas()
@@ -85,8 +119,12 @@ copy = () ->
 
 window.startLsd = (wins = 0, average_lines = 0, location = _LOCATION_) -> 
   _LOCATION_ = location 
-  _LOCATION_.appendChild(_VC_)
-  _LOCATION_.appendChild(_DOT_C_)
+  if _IF_FIRST_TIME_EVER_ is true 
+    _LOCATION_.appendChild(_VC_)
+    _LOCATION_.appendChild(_DOT_C_)
+    _LOCATION_.appendChild(_SURRENDER_BUTTON_)
+    _LOCATION_.appendChild(_BUTTONSTYLE_)
+    _IF_FIRST_TIME_EVER_ = false
   initWorld(wins, average_lines)
   tick()
 
@@ -464,12 +502,12 @@ placePoint = (point, world) ->
 
 isSurrenderClicked = (point, world = _W_) ->
   [x,y] = point
-  if x < 64 and y < 28
+  if x < 65 and y < 38
     world = surrender()
     return true
   return false
 
-surrender = (world = _W_) ->
+window.surrender = surrender = (world = _W_) ->
   world.end = true
   world.won = false # surrender clicked, so lost
   return _W_
