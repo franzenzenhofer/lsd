@@ -85,8 +85,8 @@ resizeCanvas = () ->
   _VC_.style.left = _DOT_C_.style.left = bounds.left
 
   _SURRENDER_BUTTON_.style.position = 'absolute'
-  _SURRENDER_BUTTON_.style.top = '2px'
-  _SURRENDER_BUTTON_.style.left = '2px'
+  _SURRENDER_BUTTON_.style.top = bounds.top+2
+  _SURRENDER_BUTTON_.style.left = bounds.left+2
 
 initWorld = (wins = 0, average_lines = 0) ->
   resizeCanvas()
