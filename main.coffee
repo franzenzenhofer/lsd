@@ -183,17 +183,46 @@ createRandomLine = (world = _W_) ->
 
     createLine(x1, y1, x2, y2,_W_)
 
+isWithinBoundingBox = (dot, line) ->
+  [dx,dy] = dot
+  [x1,y1,x2,y2] = line
+  exf = 20
+  #if x1 <= x2
+  #  x1 =+10; x2=-10;
+  #else
+  #  x2 =+10; x1=-10;
+  #
+  #if y1 <= y2
+  #  y1 =+10; y2=-10;
+  #else
+  #  y2 =+10; y1=-10;
+  within_x = ((x1 <= x2) and (dx >= x1-exf) and (dx <= x2+exf)) or ((x1 >= x2) and (dx <=x1+exf) and (dx >= x2-exf)) or (dx is x1) or (dx is x2)
+  within_y = ((y1 <= y2) and (dy >= y1-exf) and (dy <= y2+exf)) or ((y1 >= y2) and (dy <=y1+exf) and (dy >= y2-exf)) or (dy is y1) or (dy is y2)
+  return (within_x and within_y)
+  #if (within_x and within_y)
+  #  d("within x y")
+  #  drawBoundingBox(line, _DOT_CTX_, 'pink', 1)
+  #  return true
+  #else if within_x
+  #  d('withinx')
+  #  #return true
+  #else if within_y
+  #  d('withiny')
+  #return false
+
+
 updateDots = (world) ->
   last_collision_line = null 
   last_collision_dot = null 
   for dot, i in world.dots
     for line, j in world.lines
-      if isDotLineCollison(dot, line)
-        bounceDot(dot, line)
-        last_collision_line = line
-        last_collision_dot = dot 
+      if isWithinBoundingBox(dot, line)
+        if isDotLineCollision(dot, line)
+          bounceDot(dot, line)
+          last_collision_line = line
+          last_collision_dot = dot 
     dot = moveDot(dot)
-    if last_collision_line and last_collision_dot and isDotLineCollison(last_collision_dot, last_collision_line)
+    if last_collision_line and last_collision_dot and isDotLineCollision(last_collision_dot, last_collision_line)
       #d('dot stuck')
       moveDot(dot, 0.5)
     if isDotSquareCollision(dot, _W_.square)
@@ -228,7 +257,32 @@ drawDots = (dots, dot_ctx = _DOT_CTX_, fill_style = "black") ->
   for dot in dots
     drawDot(dot, dot_ctx, fill_style)
 
+drawBoundingBox = (line, ctx, color = 'green', line_width = 1) ->
+  #drawboundingbox
+  ctx.beginPath()
+  ctx.strokeStyle = color
+  ctx.lineWidth = line_width
+  ctx.moveTo(Math.floor(line[0]), Math.floor(line[1]))
+  ctx.lineTo(Math.floor(line[0]), Math.floor(line[3]))
+  
+  ctx.moveTo(Math.floor(line[0]), Math.floor(line[1]))
+  ctx.lineTo(Math.floor(line[2]), Math.floor(line[1]))
+
+  ctx.moveTo(Math.floor(line[2]), Math.floor(line[3]))
+  ctx.lineTo(Math.floor(line[2]), Math.floor(line[1]))
+
+  ctx.moveTo(Math.floor(line[2]), Math.floor(line[3]))
+  ctx.lineTo(Math.floor(line[0]), Math.floor(line[3]))
+
+  #ctx.lineTo(Math.floor(line[1]), Math.floor(line[1]))
+  #ctx.lineTo(Math.floor(line[3]), Math.floor(line[0]))
+  ctx.stroke()
+
+
 drawLine = (line, ctx, is_temp_line = false, line_width = LINE_WIDTH) ->
+  #drawBoundingBox(line, ctx)
+
+
   ctx.beginPath()
   ctx.moveTo(Math.floor(line[0]), Math.floor(line[1]))
   ctx.lineTo(Math.floor(line[2]), Math.floor(line[3]))
@@ -339,7 +393,7 @@ isOutOfBounds = (dot, world) ->
     return false
 
 
-isDotLineCollison = (dot, line) ->
+isDotLineCollision = (dot, line) ->
   
   closest = pointOnLineClosestToDot(dot, line)
   r = distance(dot, closest) < DOT_RADIUS
