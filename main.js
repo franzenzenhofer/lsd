@@ -223,12 +223,10 @@
     ctx.fillStyle = "black";
     ctx.font = "12px Verdana";
     if (world.wins < 10) {
-      ctx.fillText("Level " + world.wins, world.w - 48, 12);
+      return ctx.fillText("Level " + world.wins, world.w - 48, 12);
     } else {
-      ctx.fillText("Level " + world.wins, world.w - 53, 12);
+      return ctx.fillText("Level " + world.wins, world.w - 53, 12);
     }
-    ctx.fillText("Surrender", 2, 12);
-    return drawLine([2, 14, 63, 14], ctx, false, 1);
   };
 
   makeDot = function(x, y) {

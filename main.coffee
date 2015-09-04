@@ -190,8 +190,8 @@ writeStuff = (world = _W_, ctx) ->
     ctx.fillText("Level "+world.wins, world.w-48, 12)
   else
     ctx.fillText("Level "+world.wins, world.w-53, 12)
-  ctx.fillText("Surrender", 2, 12)  
-  drawLine([2,14,63,14], ctx, false, 1)
+  #ctx.fillText("Surrender", 2, 12)  
+  #drawLine([2,14,63,14], ctx, false, 1)
 
 makeDot = (x = Math.floor(_W_.w/2),y = 10) ->
   a = [x,y]
