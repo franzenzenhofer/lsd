@@ -82,8 +82,8 @@
     _VC_.style.top = _DOT_C_.style.top = bounds.top;
     _VC_.style.left = _DOT_C_.style.left = bounds.left;
     _SURRENDER_BUTTON_.style.position = 'absolute';
-    _SURRENDER_BUTTON_.style.top = bounds.top + 2;
-    return _SURRENDER_BUTTON_.style.left = bounds.left + 2;
+    _SURRENDER_BUTTON_.style.top = 2 + parseInt(_VC_.style.top);
+    return _SURRENDER_BUTTON_.style.right = 2 + parseInt(_VC_.style.left);
   };
 
   initWorld = function(wins, average_lines) {
@@ -222,11 +222,7 @@
     }
     ctx.fillStyle = "black";
     ctx.font = "12px Verdana";
-    if (world.wins < 10) {
-      return ctx.fillText("Level " + world.wins, world.w - 48, 12);
-    } else {
-      return ctx.fillText("Level " + world.wins, world.w - 53, 12);
-    }
+    return ctx.fillText("Level " + world.wins, 4, 14);
   };
 
   makeDot = function(x, y) {
@@ -596,7 +592,7 @@
       world = _W_;
     }
     x = point[0], y = point[1];
-    if (x < 65 && y < 38) {
+    if (x > (world.w - 65) && y < 38) {
       world = surrender();
       return true;
     }

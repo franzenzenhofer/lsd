@@ -85,8 +85,9 @@ resizeCanvas = () ->
   _VC_.style.left = _DOT_C_.style.left = bounds.left
 
   _SURRENDER_BUTTON_.style.position = 'absolute'
-  _SURRENDER_BUTTON_.style.top = bounds.top+2
-  _SURRENDER_BUTTON_.style.left = bounds.left+2
+  _SURRENDER_BUTTON_.style.top = 2 + parseInt(_VC_.style.top)
+  _SURRENDER_BUTTON_.style.right = 2 + parseInt(_VC_.style.left)
+  #console.log(_SURRENDER_BUTTON_)
 
 initWorld = (wins = 0, average_lines = 0) ->
   resizeCanvas()
@@ -186,10 +187,11 @@ randomInt = (min,max) ->
 writeStuff = (world = _W_, ctx) ->
   ctx.fillStyle = "black";
   ctx.font = "12px Verdana";
-  if world.wins < 10
-    ctx.fillText("Level "+world.wins, world.w-48, 12)
-  else
-    ctx.fillText("Level "+world.wins, world.w-53, 12)
+  ctx.fillText("Level "+world.wins, 4, 14)
+  #if world.wins < 10
+  #  ctx.fillText("Level "+world.wins, world.w-48, 12)
+  #else
+  #  ctx.fillText("Level "+world.wins, world.w-53, 12)
   #ctx.fillText("Surrender", 2, 12)  
   #drawLine([2,14,63,14], ctx, false, 1)
 
@@ -502,7 +504,7 @@ placePoint = (point, world) ->
 
 isSurrenderClicked = (point, world = _W_) ->
   [x,y] = point
-  if x < 65 and y < 38
+  if x > (world.w-65) and y < 38
     world = surrender()
     return true
   return false
@@ -529,7 +531,7 @@ setFinalLinePoint = (e) ->
   point = getInputCoordinates(e)
   placePoint(point, _W_)
   _W_.pointer_down = false
-  
+
 
 setTempLineEndPoint = (e) ->
   #_LINE_UPDATE_ = true
