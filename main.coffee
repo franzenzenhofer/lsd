@@ -74,8 +74,8 @@ resizeCanvas = () ->
     bounds = 
       top: "0px"
       left: "0px"
-      width: _LOCATION_.clientWidth-5
-      height: _LOCATION_.clientHeight-5
+      width: _LOCATION_.clientWidth-1
+      height: _LOCATION_.clientHeight-1
   else
     bounds = _LOCATION_.getBoundingClientRect()
   
@@ -529,6 +529,7 @@ setFinalLinePoint = (e) ->
   point = getInputCoordinates(e)
   placePoint(point, _W_)
   _W_.pointer_down = false
+  
 
 setTempLineEndPoint = (e) ->
   #_LINE_UPDATE_ = true

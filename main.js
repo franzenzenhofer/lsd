@@ -71,8 +71,8 @@
       bounds = {
         top: "0px",
         left: "0px",
-        width: _LOCATION_.clientWidth - 5,
-        height: _LOCATION_.clientHeight - 5
+        width: _LOCATION_.clientWidth - 1,
+        height: _LOCATION_.clientHeight - 1
       };
     } else {
       bounds = _LOCATION_.getBoundingClientRect();
