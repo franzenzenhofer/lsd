@@ -381,13 +381,12 @@
     ctx.moveTo(Math.floor(line[0]), Math.floor(line[1]));
     ctx.lineTo(Math.floor(line[2]), Math.floor(line[3]));
     ctx.lineWidth = line_width;
-    if (!is_temp_line) {
-      ctx.strokeStyle = "black";
-    } else {
+    ctx.strokeStyle = "black";
+    if (is_temp_line) {
       ctx.strokeStyle = "red";
     }
     ctx.stroke();
-    return ctx.strokeStyle = "black";
+    return ctx.closePath();
   };
 
   drawLines = function(lines, ctx) {
@@ -421,7 +420,7 @@
   };
 
   drawSquare = function(p, ctx, fill) {
-    var x, y;
+    var prev_stroke_style, x, y;
     if (ctx == null) {
       ctx = _CTX_;
     }
@@ -429,13 +428,17 @@
       fill = false;
     }
     x = p[0], y = p[1];
+    prev_stroke_style = ctx.strokeStyle;
+    ctx.beginPath();
     ctx.rect(x, y, SQUARE_SIDE, SQUARE_SIDE);
     ctx.strokeStyle = "black";
     ctx.stroke();
     if (fill === true) {
       ctx.fillStyle = "black";
-      return ctx.fill();
+      ctx.fill();
     }
+    ctx.strokeStyle = prev_stroke_style;
+    return ctx.closePath();
   };
 
   distance = function(dot_a, dot_b) {

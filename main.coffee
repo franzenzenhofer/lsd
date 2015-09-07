@@ -173,6 +173,7 @@ draw = (world, ctx) ->
     ctx.fillStyle = BG_COLOR
     ctx.fillRect(0, 0, world.w, world.h)
     drawLines(world.lines, ctx)
+    #drawSquare(world.square, ctx)
     drawSquare(world.square, ctx)
     drawTempLine(world, ctx)
     writeStuff(world, ctx)
@@ -327,15 +328,11 @@ drawLine = (line, ctx, is_temp_line = false, line_width = LINE_WIDTH) ->
   ctx.moveTo(Math.floor(line[0]), Math.floor(line[1]))
   ctx.lineTo(Math.floor(line[2]), Math.floor(line[3]))
   ctx.lineWidth = line_width
-  if not is_temp_line
-    #ctx.restore()
-    #ctx.setLineDash([0,0])
-    ctx.strokeStyle = "black"
-  else
-    ctx.strokeStyle = "red"
-    #ctx.setLineDash([7])
-  ctx.stroke()
   ctx.strokeStyle = "black"
+  if is_temp_line then ctx.strokeStyle = "red"
+  ctx.stroke()
+  ctx.closePath()
+  
 
 drawLines = (lines, ctx) ->
   for line in lines
@@ -360,12 +357,16 @@ drawSquare = (p, ctx = _CTX_, fill = false) ->
   [x,y] = p
   #ctx.restore()
   #ctx.setLineDash([0,0])
+  prev_stroke_style = ctx.strokeStyle
+  ctx.beginPath()
   ctx.rect(x,y,SQUARE_SIDE,SQUARE_SIDE)
   ctx.strokeStyle = "black"
   ctx.stroke()
   if fill is true
     ctx.fillStyle = "black"
     ctx.fill()
+  ctx.strokeStyle = prev_stroke_style
+  ctx.closePath()
 
 
 distance = (dot_a, dot_b) ->
