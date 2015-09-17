@@ -71,10 +71,14 @@ body { background-color: white;
 	z-index: 4;
 }
 
+blockquote {
+	display: none;
+}
 
 
 @media screen and (min-width: 1300px) {
 	
+
 	
 		#iPadIMAGE {
 			width: 100%;
@@ -143,6 +147,11 @@ body { background-color: white;
 			position: absolute;
 			border: none;
 			z-index: 3;
+		}
+
+		#blockquote
+		{
+			display: visible;
 		}
 		
 		#impressum {
