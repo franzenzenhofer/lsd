@@ -553,9 +553,6 @@ stackToLine = (stack) ->
     createLine(start_point[0], start_point[1], end_point[0], end_point[1] )
 
 
-
-
-
 #_DOT_C_
 _DOT_C_.addEventListener('mousedown', (e) -> setStartLinePoint(e))
 _DOT_C_.addEventListener('touchstart', (e) -> setStartLinePoint(e))
