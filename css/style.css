@@ -1,0 +1,171 @@
+body { background-color: white;
+	overflow-x: hidden;
+}
+
+#iPadIMAGE {
+	width: 100px;
+	height: 100px;
+}
+
+#logo {
+	width: 50px;
+	height: auto;
+	top: 5px;
+	right: 5px;
+	margin-left: 0px;
+	position: absolute;
+	border: none;
+	z-index: 1;
+}
+
+#spacer {
+	min-height: 50px;
+	top: -300px;
+}
+
+#iPad {
+	visibility: visible;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	margin-left: 0px;
+	margin-top: 0px;
+	position: absolute;
+	border: none;
+	z-index: 2;
+}
+
+#LSDframe {
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	left: 0px;
+	margin-left: 0px;
+	margin-top: 0px;
+	position: absolute;
+	border: none;
+	z-index: 3;
+}
+
+
+#fullscreen {
+	width: 70px;
+	height: auto;
+	bottom: 5px;
+	left: 95%;
+	margin-left: -35px;
+	position: absolute;
+	border: none;
+	z-index: 1;
+}
+
+#badge {
+	width: auto;
+	height: 40px;
+	bottom: 5px;
+	left: 5px;
+	margin-left: 0px;
+	position: absolute;
+	border: none;
+	z-index: 4;
+}
+
+#tweets {
+	
+}
+
+
+@media screen and (min-width: 1300px) {
+	
+
+	
+		#iPadIMAGE {
+			width: 100%;
+			height: 100%;
+		}
+
+	
+		#logo {
+			width: 100px;
+			height: auto;
+			top: -100px;
+			left: 50%;
+			margin-left: -50px;
+			position: absolute;
+			border: none;
+			z-index: 3;
+		}
+
+		#LSDframe {
+			width: 970px;
+			height: 660px;
+			top: 50%;
+			left: 50%;
+			margin-left: -485px;
+			margin-top: -325px;
+			position: absolute;
+			border: none;
+			z-index: 3;
+		}
+
+		#spacer {
+			min-height: 900px;
+			top: -300px;
+		}
+		
+		#iPadDIV {
+			visibility: visible;
+			width: 1200px;
+			height: 800px;
+			top: 50%;
+			left: 50%;
+			margin-left: -600px;
+			margin-top: 130px;
+			position: relative;
+			border: none;
+			z-index: 2;
+		}
+
+		#fullscreen {
+			width: 70px;
+			height: auto;
+			bottom: -70px;
+			left: 95%;
+			margin-left: -35px;
+			position: absolute;
+			border: none;
+			z-index: 3;
+		}
+
+		#badge {
+			width: 200px;
+			height: 70px;
+			bottom: -70px;
+			left: 50%;
+			margin-left: -100px;
+			position: absolute;
+			border: none;
+			z-index: 3;
+		}
+
+		#tweets
+		{
+			position: relative;
+			bottom: -90px;
+		}
+
+
+		#impressum {
+			width: 300px;
+			height: 70px;
+			bottom: -85px;
+			left: 13%;
+			margin-left: -125px;
+			position: absolute;
+			border: none;
+			z-index: 3;
+			color: gray;
+			font-family: 'Helvetica', 'Arial', sans-serif;
+		}
+}

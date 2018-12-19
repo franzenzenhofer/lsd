@@ -1,0 +1,16 @@
+<h1>lsd in a box</h1>
+<div id="box" style="width:600px; height:400px"></div>
+<script src="main.js"></script>
+<script>startLsd(0,0,document.getElementById('box'));</script>
+<script>
+fullScreen = function () {
+  var box = document.getElementById('box');
+  box.webkitRequestFullscreen();
+  box.style.position = 'absolute';
+  box.style.top = '0px';
+  box.style.left = '0px';
+  box.style.width = '100%';
+  box.style.height = '100%';
+}
+</script>
+<button onclick="fullScreen();">fullscreen (webkit prefix only)</button>
