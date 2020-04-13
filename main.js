@@ -89,7 +89,7 @@
     _VC_.style.left = _DOT_C_.style.left = bounds.left;
     _SURRENDER_BUTTON_.style.position = 'absolute';
     _SURRENDER_BUTTON_.style.top = 3 + parseInt(_VC_.style.top);
-    return _SURRENDER_BUTTON_.style.left = parseInt(_VC_.width - 100);
+    return _SURRENDER_BUTTON_.style.left = parseInt(_VC_.width - 90);
   };
 
   //console.log(_SURRENDER_BUTTON_)

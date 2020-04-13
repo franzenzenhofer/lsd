@@ -100,7 +100,7 @@ resizeCanvas = () ->
 
   _SURRENDER_BUTTON_.style.position = 'absolute'
   _SURRENDER_BUTTON_.style.top = 3 + parseInt(_VC_.style.top)
-  _SURRENDER_BUTTON_.style.left = parseInt(_VC_.width-100)
+  _SURRENDER_BUTTON_.style.left = parseInt(_VC_.width-90)
   #console.log(_SURRENDER_BUTTON_)
 
 initWorld = (wins = 0, average_lines = 0) ->
