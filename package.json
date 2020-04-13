@@ -1,0 +1,22 @@
+{
+  "name": "line-square-dot",
+  "version": "1.0.0",
+  "description": "a line square dot game",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/franzenzenhofer/lsd.git"
+  },
+  "author": "franz enzenhofer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/franzenzenhofer/lsd/issues"
+  },
+  "homepage": "https://github.com/franzenzenhofer/lsd#readme",
+  "devDependencies": {
+    "coffeescript": "^2.5.1"
+  }
+}

@@ -7,12 +7,12 @@ _ANIMATION_FRAME_ID_ = 0
 
 VELOCITY_Y = 3.5
 VELOCITY_X = 0
-DOT_RADIUS = 3
+DOT_RADIUS = 5
 DOT_U = 6
 GRAVITY_Y = 0.0138
 SQUARE_SIDE = 35
-BG_COLOR = '#ececec'
-LINE_WIDTH = 1
+BG_COLOR = 'white'
+LINE_WIDTH = 2
 
 _LOCATION_ = window.document.body
 _LINE_UPDATE_ = true
@@ -41,7 +41,7 @@ _SURRENDER_BUTTON_.id = 'surrender_button'
 _SURRENDER_BUTTON_.innerHTML = 'Surrender'
 
 _BUTTONSTYLE_ = document.createElement('style')
-_BUTTONSTYLE_.innerText = '#surrender_button {
+_BUTTONSTYLE_.blabla = '#surrender_button {
   display: inline-block;
   position: relative;
   color: #888;
@@ -63,6 +63,20 @@ _BUTTONSTYLE_.innerText = '#surrender_button {
   background-image: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(239,239,239,1) 60%,rgba(225,223,226,1) 100%);
   background-image: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(239,239,239,1) 60%,rgba(225,223,226,1) 100%);
   background-image: linear-gradient(top, rgba(255,255,255,1) 0%,rgba(239,239,239,1) 60%,rgba(225,223,226,1) 100%);
+}' 
+
+_BUTTONSTYLE_.innerText = '#surrender_button {
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+display: inline-block;
+position: relative;
+color: #494949 !important;
+text-transform: uppercase;
+text-decoration: none;
+background: white;
+padding: 10px;
+border: 2px solid #494949 !important;
+display: inline-block;
+transition: all 0.4s ease 0s;
 }'
 
 
@@ -86,7 +100,7 @@ resizeCanvas = () ->
 
   _SURRENDER_BUTTON_.style.position = 'absolute'
   _SURRENDER_BUTTON_.style.top = 3 + parseInt(_VC_.style.top)
-  _SURRENDER_BUTTON_.style.left = parseInt(_VC_.width-86)
+  _SURRENDER_BUTTON_.style.left = parseInt(_VC_.width-100)
   #console.log(_SURRENDER_BUTTON_)
 
 initWorld = (wins = 0, average_lines = 0) ->
@@ -187,8 +201,8 @@ randomInt = (min,max) ->
 
 writeStuff = (world = _W_, ctx) ->
   ctx.fillStyle = "black";
-  ctx.font = "12px Verdana";
-  ctx.fillText("Level "+world.wins, 4, 14)
+  ctx.font = "11px -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif";
+  ctx.fillText("LEVEL "+world.wins, 12, 25)
   #if world.wins < 10
   #  ctx.fillText("Level "+world.wins, world.w-48, 12)
   #else
