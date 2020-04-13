@@ -213,7 +213,7 @@
   writeStuff = function(world = _W_, ctx) {
     ctx.fillStyle = "black";
     ctx.font = "11px -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif";
-    return ctx.fillText("LEVEL " + world.wins, 12, 25);
+    return ctx.fillText("" + world.wins, 12, 25);
   };
 
   //if world.wins < 10

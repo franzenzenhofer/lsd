@@ -202,7 +202,7 @@ randomInt = (min,max) ->
 writeStuff = (world = _W_, ctx) ->
   ctx.fillStyle = "black";
   ctx.font = "11px -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif";
-  ctx.fillText("LEVEL "+world.wins, 12, 25)
+  ctx.fillText(""+world.wins, 12, 25)
   #if world.wins < 10
   #  ctx.fillText("Level "+world.wins, world.w-48, 12)
   #else
