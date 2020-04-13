@@ -74,7 +74,7 @@ text-transform: uppercase;
 text-decoration: none;
 background: white;
 padding: 10px;
-border: 2px solid #494949 !important;
+border: 0px solid #494949 !important;
 display: inline-block;
 transition: all 0.4s ease 0s;
 }'
