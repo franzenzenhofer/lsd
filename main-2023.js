@@ -599,18 +599,29 @@ else
   }
   
 
-const isLevelTextClicked = (e) => {
-const levelText = document.getElementById("level-text");
-const rect = levelText.getBoundingClientRect();
-const x = e.clientX;
-const y = e.clientY;
-if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
-  black_and_white = toggleBlackAndWhite();
-  draw(_W_, _CTX_, true);
-  return true;
-}
-return false;
-}
+  const isLevelTextClicked = (point, world) => {
+    if (world == null) {
+      world = _W_;
+    }
+  
+    const levelText = document.getElementById("level-text");
+    const rect = levelText.getBoundingClientRect();
+    const x = point[0];
+    const y = point[1];
+    const padding = 10; // Add padding for better click detection
+    const left = rect.left - padding;
+    const right = rect.right + padding;
+    const top = rect.top - padding;
+    const bottom = rect.bottom + padding;
+  
+    if (x >= left && x <= right && y >= top && y <= bottom) {
+      black_and_white = toggleBlackAndWhite();
+      draw(_W_, _CTX_, true);
+      return true;
+    }
+    return false;
+  };
+  
 
 
 
@@ -629,7 +640,7 @@ return false;
     e.preventDefault();
     _W_.line_point_stack = [];
     point = getInputCoordinates(e);
-    if (isSurrenderClicked(point) === false && isLevelTextClicked(e) === false) {
+    if (isSurrenderClicked(point) === false && isLevelTextClicked(point) === false) {
       placePoint(point, _W_);
       return _W_.pointer_down = true;
     }
