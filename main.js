@@ -94,7 +94,7 @@
     if (average_lines == null) {
       average_lines = 0;
     }
-    resizeCanvas();
+    resizeCanvas(); 
     _W_.dots = [];
     _W_.lines = [];
     _W_.line_point_stack = [];
