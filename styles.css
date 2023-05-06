@@ -7,6 +7,10 @@
     image-rendering: -webkit-optimize-contrast;
   
   }
+
+  html {
+    touch-action: pan-y;
+  }
   
   
   /* styles.css */
